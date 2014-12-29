@@ -3,12 +3,13 @@
 --
 
 -- --------------------------------------------------------
-
+SET FOREIGN_KEY_CHECKS = 0;
 --
--- Table structure for table `user_session_definition`
+-- Table structure for table `user_session_configs`
 --
 
-CREATE TABLE IF NOT EXISTS `[{prefix}]user_session_definitions` (
+DROP TABLE IF EXISTS `[{prefix}]user_session_configs`;
+CREATE TABLE IF NOT EXISTS `[{prefix}]user_session_configs` (
   `role_id` int(16),
   `multiple_sessions` int(1),
   `allowed_attempts` int(16),
@@ -24,9 +25,10 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]user_session_definitions` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user_session_definition`
+-- Table structure for table `user_session_data`
 --
 
+DROP TABLE IF EXISTS `[{prefix}]user_session_data`;
 CREATE TABLE IF NOT EXISTS `[{prefix}]user_session_data` (
   `user_id` int(16),
   `logins` text,
@@ -41,6 +43,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]user_session_data` (
 -- Table structure for table `user_sessions`
 --
 
+DROP TABLE IF EXISTS `[{prefix}]user_sessions`;
 CREATE TABLE IF NOT EXISTS `[{prefix}]user_sessions` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
   `user_id` int(16),
@@ -52,3 +55,4 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]user_sessions` (
   CONSTRAINT `fk_session_user` FOREIGN KEY (`user_id`) REFERENCES `[{prefix}]users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4001 ;
 
+SET FOREIGN_KEY_CHECKS = 1;
