@@ -1,0 +1,10 @@
+<?php include $phireHeader; ?>
+    <h1 class="modules-header"><?=$title; ?> : <?=$role; ?></h1>
+    <nav id="sub-nav">
+<?php if (($acl->isAllowed($user->role, 'sessions', 'add')) && ($rolesAvailable)): ?>
+        <nav><a href="<?=$phireUri . '/sessions/add'; ?>">+ Add</a></nav>
+<?php endif; ?>
+        <nav><a href="<?=$phireUri . '/sessions'; ?>">Back</a></nav>
+    </nav>
+<?=$form; ?>
+<?php include $phireFooter; ?>

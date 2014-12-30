@@ -1,0 +1,94 @@
+/**
+ * Sessions Module Style Sheet for Phire CMS 2
+ */
+
+#session-failure {
+    position: absolute;
+    z-index: 10000;
+    top: 55px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: none;
+    opacity: 0;
+    margin: 0 auto;
+    font-weight: bold;
+    text-align: center;
+    padding: 13px 0 11px 0;
+    width: 200px;
+    height: 20px;
+    font-size: 0.9em;
+    color: #8e0202;
+    background-color: #e8d0d0;
+    border-radius: 7px;
+    box-shadow: 0 0 10px 3px #bfa4a4;
+}
+
+#session-timeout {
+    position: absolute;
+    z-index: 10000;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: none;
+    opacity: 0;
+    margin: auto;
+    font-weight: bold;
+    text-align: center;
+    padding: 12px;
+    width: 240px;
+    height: 70px;
+    font-size: 0.9em;
+    line-height: 1.5em;
+    color: #555;
+    background-color: #fff;
+    border-radius: 7px;
+    box-shadow: 0 0 6px 2px #bbb;
+}
+
+#session-timeout a, #session-timeout span {
+    font-weight: normal;
+}
+
+#session-timeout h4 {
+    margin: 0;
+    padding: 4px 0 8px 0;
+    font-size: 1.8em;
+    font-weight: normal;
+    color: #999;
+}
+
+#session-form {
+    margin: 10px auto 10px auto;
+    padding: 15px 0 15px 0;
+    width: 100%;
+    border-top: solid 1px #ccc;
+}
+
+#session-form > dl:first-child {
+    margin: 0 0 0 20px;
+    padding: 0 0 0 20px;
+    width: 160px;
+    border-left: solid 1px #ccc;
+    float: right;
+    min-height: 300px;
+    height: 100%;
+}
+
+#session-form > dl:first-child > dd, #sessionr-form > dl:first-child > dt {
+    width: 100%;
+}
+
+#session-form > dl:first-child > dt {
+    margin: 0 0 5px 0;
+    border-bottom: dotted 1px #aaa;
+}
+
+#session-form > dl:first-child > dd {
+    margin: 0 0 10px 0;
+}
+
+#session-form > dl:nth-child(2) > dd {
+    padding: 0 2px 14px 2px;
+}

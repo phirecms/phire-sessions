@@ -36,7 +36,7 @@ return [
         'events' => [
             [
                 'name'   => 'app.send',
-                'action' => 'Sessions\Model\UserSession::log'
+                'action' => 'Sessions\Model\UserSession::login'
             ],
             [
                 'name'   => 'app.dispatch.pre',

@@ -4,23 +4,109 @@ namespace Sessions\Model;
 
 use Phire\Model\AbstractModel;
 use Pop\Http\Response;
+use Pop\Log;
+use Pop\Web\Cookie;
 use Sessions\Table;
 
 class UserSession extends AbstractModel
 {
 
     /**
-     * Record session
+     * Get all user sessions
+     *
+     * @param  int    $limit
+     * @param  int    $page
+     * @param  string $sort
+     * @return array
+     */
+    public function getAll($limit = null, $page = null, $sort = null)
+    {
+        $sql = Table\UserSessions::sql();
+        $sql->select([
+            'id'           => DB_PREFIX . 'user_sessions.id',
+            'user_id'      => DB_PREFIX . 'user_sessions.user_id',
+            'ip'           => DB_PREFIX . 'user_sessions.ip',
+            'ua'           => DB_PREFIX . 'user_sessions.ua',
+            'start'        => DB_PREFIX . 'user_sessions.start',
+            'username'     => DB_PREFIX . 'users.username'
+        ])->join(DB_PREFIX . 'users', [DB_PREFIX . 'users.id' => DB_PREFIX . 'user_sessions.user_id']);
+
+        if (null !== $limit) {
+            $page = ((null !== $page) && ((int)$page > 1)) ?
+                ($page * $limit) - $limit : null;
+
+            $sql->select()->offset($page)->limit($limit);
+        }
+
+        $params = [];
+        $order  = $this->getSortOrder($sort, $page);
+        $by     = explode(' ', $order);
+        $sql->select()->orderBy($by[0], $by[1]);
+
+        return (count($params) > 0) ?
+            Table\UserSessions::execute((string)$sql, $params)->rows() :
+            Table\UserSessions::query((string)$sql)->rows();
+    }
+
+    /**
+     * Remove a user session
+     *
+     * @param  array $post
+     * @return void
+     */
+    public function remove(array $post)
+    {
+        if (isset($post['rm_sessions'])) {
+            foreach ($post['rm_sessions'] as $id) {
+                $session = Table\UserSessions::findById((int)$id);
+                if (isset($session->id)) {
+                    $session->delete();
+                }
+            }
+        }
+    }
+
+    /**
+     * Determine if list of user sessions have pages
+     *
+     * @param  int $limit
+     * @return boolean
+     */
+    public function hasPages($limit)
+    {
+        return (Table\UserSessions::findAll()->count() > $limit);
+    }
+
+    /**
+     * Get count of user sessions
+     *
+     * @return int
+     */
+    public function getCount()
+    {
+        return Table\UserSessions::findAll()->count();
+    }
+
+    /**
+     * Login and track session
      *
      * @param  \Phire\Controller\AbstractController $controller
      * @param  \Phire\Application                   $application
      * @return void
      */
-    public static function log(\Phire\Controller\AbstractController $controller, \Phire\Application $application)
+    public static function login(\Phire\Controller\AbstractController $controller, \Phire\Application $application)
     {
         $sess = $application->getService('session');
 
-        // Start new session
+        $path = BASE_PATH . APP_URI;
+        if ($path == '') {
+            $path = '/';
+        }
+        $cookie = Cookie::getInstance(['path' => $path]);
+        $cookie->delete('phire_session_timeout');
+        $cookie->delete('phire_session_path');
+
+        // If login, validate and start new session
         if (($controller->request()->isPost()) && ($controller->request()->getRequestUri() == BASE_PATH . APP_URI . '/login')) {
             // If the user successfully logged in
             if (isset($sess->user)) {
@@ -39,8 +125,11 @@ class UserSession extends AbstractModel
                             ]);
                             $data->save();
                         }
+                        if (isset($config->role_id) && ((int)$config->log_type > 0) && (null !== $config->log_emails)) {
+                            self::log($config, $sess->user, false);
+                        }
                         $sess->kill();
-                        Response::redirect(BASE_PATH . APP_URI . '/login?failed=1');
+                        Response::redirect(BASE_PATH . APP_URI . '/login?failed=' . $data->failed_attempts);
                         exit();
                     } else {
                         if (isset($data->user_id)) {
@@ -65,10 +154,10 @@ class UserSession extends AbstractModel
                         }
                     }
                     $expire  = ((int)$config->session_expiration > 0) ? (int)$config->session_expiration : null;
-                    $timeout = ((int)$config->timeout_warning > 0)    ? (int)$config->timeout_warning    : null;
+                    $timeout = ((int)$config->timeout_warning);
                 } else {
                     $expire  = null;
-                    $timeout = null;
+                    $timeout = false;
                 }
                 $session = new Table\UserSessions([
                     'user_id' => $sess->user->id,
@@ -84,10 +173,14 @@ class UserSession extends AbstractModel
                     'expire'  => $expire,
                     'timeout' => $timeout
                 ], \ArrayObject::ARRAY_AS_PROPS);
+                if (isset($config->role_id) && ((int)$config->log_type > 0) && (null !== $config->log_emails)) {
+                    self::log($config, $sess->user, true);
+                }
             // Else, if the user login failed
             } else {
                 if ((null !== $controller->view()->form) && (null !== $controller->view()->form->username)) {
-                    $user = \Phire\Table\Users::findBy(['username' => $controller->view()->form->username]);
+                    $user   = \Phire\Table\Users::findBy(['username' => $controller->view()->form->username]);
+                    $config = Table\UserSessionConfigs::findById($user->role_id);
                     if (isset($user->id)) {
                         $data = Table\UserSessionData::findById($user->id);
                         if (isset($data->user_id)) {
@@ -100,6 +193,9 @@ class UserSession extends AbstractModel
                                 'failed_attempts' => 1
                             ]);
                             $data->save();
+                        }
+                        if (isset($config->role_id) && ((int)$config->log_type > 0) && (null !== $config->log_emails)) {
+                            self::log($config, $user, false);
                         }
                     }
                 }
@@ -116,6 +212,10 @@ class UserSession extends AbstractModel
                 Response::redirect(BASE_PATH . APP_URI . '/login?expired=1');
                 exit();
             } else {
+                if (($sess->user->session->timeout) && (null !== $sess->user->session->expire)) {
+                    $cookie->set('phire_session_timeout', $sess->user->session->expire - 30);
+                    $cookie->set('phire_session_path', BASE_PATH . APP_URI);
+                }
                 $sess->user->session->last = time();
             }
         }
@@ -156,24 +256,21 @@ class UserSession extends AbstractModel
         if ((!$config->multiple_sessions) && isset(Table\UserSessions::findBy(['user_id' => $user->id])->id)) {
             $result = false;
         }
-
         // Check for too many failed attempts
         if ($config->allowed_attempts > 0) {
             if (isset($data->user_id) && ($data->failed_attempts >= $config->allowed_attempts)) {
                 $result = false;
             }
         }
-
         // Check IP allowed
-        if (null !== $config->ip_allowed) {
+        if (!empty($config->ip_allowed)) {
             $ipAllowed = explode(',', $config->ip_allowed);
             if (!in_array($_SERVER['REMOTE_ADDR'], $ipAllowed)) {
                 $result = false;
             }
         }
-
         // Check IP blocked
-        if (null !== $config->ip_blocked) {
+        if (!empty($config->ip_blocked)) {
             $ipBlocked = explode(',', $config->ip_blocked);
             if (in_array($_SERVER['REMOTE_ADDR'], $ipBlocked)) {
                 $result = false;
@@ -181,6 +278,43 @@ class UserSession extends AbstractModel
         }
 
         return $result;
+    }
+
+
+    /**
+     * Log session
+     *
+     * @param  mixed   $config
+     * @param  mixed   $user
+     * @param  boolean $success
+     * @return void
+     */
+    public static function log($config, $user, $success)
+    {
+        if (($config->log_type == 3) || (($config->log_type == 2) && ($success)) || (($config->log_type == 1) && (!$success))) {
+            $domain  = str_replace('www.', '', $_SERVER['HTTP_HOST']);
+            $noreply = 'noreply@' . $domain;
+            $options = [
+                'subject' => (($success) ? 'Successful' : 'Failed') . ' Login (' . $domain . ') : Phire CMS Session Notification',
+                'headers' => [
+                    'From'     => $noreply . ' <' . $noreply . '>',
+                    'Reply-To' => $noreply . ' <' . $noreply . '>'
+                ]
+            ];
+
+            $message = ($success) ?
+                'Someone has logged in as \'' . $user->username . '\' from ' . $_SERVER['REMOTE_ADDR'] :
+                'Someone attempted to log in as \'' . $user->username . '\' from ' . $_SERVER['REMOTE_ADDR'];
+
+            $emails = explode(',', $config->log_emails);
+            if (in_array($user->email, $emails)) {
+                unset($emails[array_search($user->email, $emails)]);
+            }
+            if (count($emails) > 0) {
+                $logger = new Log\Logger(new Log\Writer\Mail($emails, $options));
+                $logger->alert($message);
+            }
+        }
     }
 
 }

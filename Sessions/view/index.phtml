@@ -1,0 +1,50 @@
+<?php include $phireHeader; ?>
+    <h1 class="modules-header"><?=$title; ?></h1>
+<?php if (count($sessions) > 0): ?>
+<?php if (null !== $pages): ?>
+    <div class="page-links"><?=$pages; ?></div>
+<?php endif; ?>
+<?php if (($acl->isAllowed($user->role, 'sessions', 'add')) && ($rolesAvailable)): ?>
+    <nav id="sub-nav">
+        <nav><a href="<?=$phireUri . '/sessions/add'; ?>">+ Add</a></nav>
+    </nav>
+<?php endif; ?>
+<?php if ($acl->isAllowed($user->role, 'sessions', 'remove')): ?>
+    <form id="sessions-form" action="<?=$phireUri . '/sessions/remove'; ?>" method="post">
+<?php endif; ?>
+        <table class="data-table" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+                <th><a href="<?=$phireUri . '/sessions?sort=role_id';?>">#</a></th>
+                <th><a href="<?=$phireUri . '/sessions?sort=role';?>">Role</a></th>
+                <th class="text-center">Multiple Sessions</th>
+                <th class="text-center">Allowed Attempts</th>
+                <th class="text-center">Session Expiration</th>
+                <th class="text-center"><?php if ($acl->isAllowed($user->role, 'sessions', 'edit')): ?>Edit<?php else: ?>&nbsp;<?php endif; ?></th>
+                <th class="text-center"><?php if ($acl->isAllowed($user->role, 'sessions', 'remove')): ?><input type="checkbox" name="checkall" id="checkall" value="rm_sessions" /><?php else: ?>&nbsp;<?php endif; ?></th>
+            </tr>
+<?php $i = 1; ?>
+<?php foreach ($sessions as $session): ?>
+            <tr>
+                <td><?=$session->role_id; ?></td>
+                <td><?=$session->role; ?></td>
+                <td class="text-center"><?=(($session->multiple_sessions) ? 'Yes' : 'No'); ?></td>
+                <td class="text-center"><?=(($session->allowed_attempts > 0) ? $session->allowed_attempts : 'N/A'); ?></td>
+                <td class="text-center"><?=(($session->session_expiration > 0) ? round($session->session_expiration / 60): 'N/A'); ?></td>
+                <td><?php if ($acl->isAllowed($user->role, 'sessions', 'edit')): ?><a class="edit-link" href="<?=$phireUri . '/sessions/edit/' . $session->role_id; ?>">Edit</a><?php else: ?>&nbsp;<?php endif; ?></td>
+                <td class="text-center"><?php if ($acl->isAllowed($user->role, 'sessions', 'remove')): ?><input type="checkbox" name="rm_sessions[]" id="rm_sessions<?=$i++; ?>" value="<?=$session->role_id; ?>" /><?php else: ?>&nbsp;<?php endif; ?></td>
+            </tr>
+<?php endforeach; ?>
+        </table>
+<?php if ($acl->isAllowed($user->role, 'sessions', 'remove')): ?>
+        <div id="form-footer"><input type="submit" name="submit" class="process-btn" value="Remove" /></div>
+    </form>
+<?php endif; ?>
+<?php else: ?>
+<?php if (($acl->isAllowed($user->role, 'sessions', 'add')) && ($rolesAvailable)): ?>
+    <nav id="sub-nav">
+        <nav><a href="<?=$phireUri . '/sessions/add'; ?>">+ Add</a></nav>
+    </nav>
+<?php endif; ?>
+    <p>There are currently no session configurations for any user roles.</p>
+<?php endif; ?>
+<?php include $phireFooter; ?>

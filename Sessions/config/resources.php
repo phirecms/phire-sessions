@@ -2,7 +2,10 @@
 
 return [
     'sessions' => [
-        'index'
+        'index',
+        'add',
+        'edit',
+        'remove'
     ],
     'users-sessions' => [
         'index',
