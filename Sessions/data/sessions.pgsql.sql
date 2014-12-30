@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_session_configs" (
   "ip_allowed" text,
   "ip_blocked" text,
   "log_emails" text,
-  INDEX "sess_role_id" ("role_id"),
+  UNIQUE ("role_id"),
   CONSTRAINT "fk_user_session_role_id" FOREIGN KEY ("role_id") REFERENCES "[{prefix}]user_roles" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_session_data" (
   "user_id" integer,
   "logins" text,
   "failed_attempts" integer,
-  INDEX "sess_data_user_id" ("user_id"),
+  UNIQUE ("user_id"),
   CONSTRAINT "fk_sess_data_user_id" FOREIGN KEY ("user_id") REFERENCES "[{prefix}]users" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
@@ -51,9 +51,8 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_sessions" (
   "user_id" integer,
   "ip" varchar(255) NOT NULL,
   "ua" varchar(255) NOT NULL,
-  "start" datetime NOT NULL,
+  "start" integer NOT NULL,
   PRIMARY KEY ("id"),
-  INDEX "sess_user_id" ("user_id"),
   CONSTRAINT "fk_session_user" FOREIGN KEY ("user_id") REFERENCES "[{prefix}]users" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 

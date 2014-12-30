@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_sessions" (
   "user_id" integer,
   "ip" varchar(255) NOT NULL,
   "ua" varchar(255) NOT NULL,
-  "start" datetime NOT NULL,
+  "start" integer NOT NULL,
   UNIQUE ("id"),
   CONSTRAINT "fk_session_user" FOREIGN KEY ("user_id") REFERENCES "[{prefix}]users" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;

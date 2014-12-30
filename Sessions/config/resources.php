@@ -5,6 +5,7 @@ return [
         'index'
     ],
     'users-sessions' => [
-        'index'
+        'index',
+        'remove'
     ]
 ];

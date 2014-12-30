@@ -18,7 +18,7 @@ return [
                         'name' => 'Sessions',
                         'href' => BASE_PATH . APP_URI . '/users/sessions',
                         'acl'  => [
-                            'resource'   => 'user-sessions',
+                            'resource'   => 'users-sessions',
                             'permission' => 'index'
                         ]
                     ]
@@ -31,6 +31,16 @@ return [
             'acl'  => [
                 'resource'   => 'sessions',
                 'permission' => 'index'
+            ]
+        ],
+        'events' => [
+            [
+                'name'   => 'app.send',
+                'action' => 'Sessions\Model\UserSession::log'
+            ],
+            [
+                'name'   => 'app.dispatch.pre',
+                'action' => 'Sessions\Model\UserSession::logout'
             ]
         ]
     ]
