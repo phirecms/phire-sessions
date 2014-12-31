@@ -183,7 +183,8 @@ class UserSession extends AbstractModel
         $cookie->delete('phire_session_path');
 
         // If login, validate and start new session
-        if (($controller->request()->isPost()) && ($controller->request()->getRequestUri() == BASE_PATH . APP_URI . '/login')) {
+        if (($controller->request()->isPost()) &&
+            ($controller->request()->getRequestUri() == BASE_PATH . APP_URI . '/login')) {
             // If the user successfully logged in
             if (isset($sess->user)) {
                 $config = Table\UserSessionConfig::findById($sess->user->role_id);
@@ -279,7 +280,8 @@ class UserSession extends AbstractModel
         // Check existing session
         } else if (isset($sess->user) && isset($sess->user->session)) {
             if ((!isset(Table\UserSessions::findById((int)$sess->user->session->id)->id)) ||
-                ((null !== $sess->user->session->expire) && ((time() - $sess->user->session->last) >= $sess->user->session->expire))) {
+                ((null !== $sess->user->session->expire) &&
+                    ((time() - $sess->user->session->last) >= $sess->user->session->expire))) {
                 $session = Table\UserSessions::findById((int)$sess->user->session->id);
                 if (isset($session->id)) {
                     $session->delete();
@@ -367,11 +369,13 @@ class UserSession extends AbstractModel
      */
     public static function log($config, $user, $success)
     {
-        if (($config->log_type == 3) || (($config->log_type == 2) && ($success)) || (($config->log_type == 1) && (!$success))) {
+        if (($config->log_type == 3) || (($config->log_type == 2) && ($success)) ||
+            (($config->log_type == 1) && (!$success))) {
             $domain  = str_replace('www.', '', $_SERVER['HTTP_HOST']);
             $noreply = 'noreply@' . $domain;
             $options = [
-                'subject' => (($success) ? 'Successful' : 'Failed') . ' Login (' . $domain . ') : Phire CMS Session Notification',
+                'subject' => (($success) ? 'Successful' : 'Failed') .
+                    ' Login (' . $domain . ') : Phire CMS Session Notification',
                 'headers' => [
                     'From'     => $noreply . ' <' . $noreply . '>',
                     'Reply-To' => $noreply . ' <' . $noreply . '>'

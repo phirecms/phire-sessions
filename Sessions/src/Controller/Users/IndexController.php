@@ -31,7 +31,9 @@ class IndexController extends AbstractController
         $this->prepareView('users/sessions.phtml');
         $this->view->title    = 'Users : Sessions';
         $this->view->pages    = $pages;
-        $this->view->sessions = $session->getAll($limit, $this->request->getQuery('page'), $this->request->getQuery('sort'));
+        $this->view->sessions = $session->getAll(
+            $limit, $this->request->getQuery('page'), $this->request->getQuery('sort')
+        );
         $this->send();
     }
 

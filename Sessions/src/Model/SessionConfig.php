@@ -21,7 +21,7 @@ class SessionConfig extends AbstractModel
     {
         $sql = Table\UserSessionConfig::sql();
         $sql->select([
-            'role_id'      => DB_PREFIX . 'user_session_config.role_id',
+            'role_id'             => DB_PREFIX . 'user_session_config.role_id',
             'multiple_sessions'   => DB_PREFIX . 'user_session_config.multiple_sessions',
             'allowed_attempts'    => DB_PREFIX . 'user_session_config.allowed_attempts',
             'session_expiration'  => DB_PREFIX . 'user_session_config.session_expiration',
@@ -62,7 +62,8 @@ class SessionConfig extends AbstractModel
             $this->data['role_id']            = $session->role_id;
             $this->data['multiple_sessions']  = $session->multiple_sessions;
             $this->data['allowed_attempts']   = $session->allowed_attempts;
-            $this->data['session_expiration'] = ($session->session_expiration > 0) ? round($session->session_expiration / 60) : 0;
+            $this->data['session_expiration'] = ($session->session_expiration > 0) ?
+                round($session->session_expiration / 60) : 0;
             $this->data['timeout_warning']    = (int)$session->timeout_warning;
             $this->data['ip_allowed']         = $session->ip_allowed;
             $this->data['ip_blocked']         = $session->ip_blocked;
