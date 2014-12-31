@@ -36,6 +36,10 @@ return [
         'events' => [
             [
                 'name'   => 'app.send',
+                'action' => 'Sessions\Model\UserSession::header'
+            ],
+            [
+                'name'   => 'app.send',
                 'action' => 'Sessions\Model\UserSession::login'
             ],
             [

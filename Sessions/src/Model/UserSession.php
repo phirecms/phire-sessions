@@ -133,6 +133,22 @@ class UserSession extends AbstractModel
     }
 
     /**
+     * Alter header view
+     *
+     * @param  \Phire\Controller\AbstractController $controller
+     * @param  \Phire\Application                   $application
+     * @return void
+     */
+    public static function header(\Phire\Controller\AbstractController $controller, \Phire\Application $application)
+    {
+        $sess = $application->getService('session');
+        if (isset($sess->user) && isset($sess->user->session) && ($controller->hasView())) {
+            $controller->view()->lastSession = 123;
+            $controller->view()->phireHeader = __DIR__ . '/../../view/header.phtml';
+        }
+    }
+
+    /**
      * Alter user list view
      *
      * @param  \Phire\Controller\AbstractController $controller
@@ -236,6 +252,24 @@ class UserSession extends AbstractModel
                     $expire  = null;
                     $timeout = false;
                 }
+
+                $lastLogin = null;
+                $lastIp    = null;
+
+                // Check for the last login
+                $data = Table\UserSessionData::findById($sess->user->id);
+                if (isset($data->user_id)) {
+                    $logins = (null !== $data->logins) ? unserialize($data->logins) : [];
+                    if (count($logins) > 1) {
+                        $keys      = array_keys($logins);
+                        $timestamp = (isset($keys[count($keys) - 2])) ? $keys[count($keys) - 2] : null;
+                        if ((null !== $timestamp) && isset($logins[$timestamp])) {
+                            $lastLogin = $timestamp;
+                            $lastIp    = $logins[$timestamp]['ip'];
+                        }
+                    }
+                }
+
                 $session = new Table\UserSessions([
                     'user_id' => $sess->user->id,
                     'ip'      => $_SERVER['REMOTE_ADDR'],
@@ -244,11 +278,13 @@ class UserSession extends AbstractModel
                 ]);
                 $session->save();
                 $sess->user->session = new \ArrayObject([
-                    'id'      => $session->id,
-                    'start'   => $session->start,
-                    'last'    => $session->start,
-                    'expire'  => $expire,
-                    'timeout' => $timeout
+                    'id'         => $session->id,
+                    'start'      => $session->start,
+                    'last'       => $session->start,
+                    'expire'     => $expire,
+                    'timeout'    => $timeout,
+                    'last_login' => $lastLogin,
+                    'last_ip'    => $lastIp
                 ], \ArrayObject::ARRAY_AS_PROPS);
                 if (isset($config->role_id) && ((int)$config->log_type > 0) && (null !== $config->log_emails)) {
                     self::log($config, $sess->user, true);

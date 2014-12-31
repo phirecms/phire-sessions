@@ -53,16 +53,6 @@ class SessionConfig extends Form
                     'value'      => $roleValues,
                     'validators' => new Validator\NotEqual('----', 'Please select a role.')
                 ],
-                'log_type' => [
-                    'type'       => 'select',
-                    'label'      => 'Log Type',
-                    'value'      => [
-                        '--' => '----',
-                        '1'  => 'Failure',
-                        '2'  => 'Success',
-                        '3'  => 'Both'
-                    ]
-                ],
                 'multiple_sessions' => [
                     'type'      => 'radio',
                     'label'     => 'Multiple Sessions',
@@ -121,6 +111,16 @@ class SessionConfig extends Form
                     'attributes' => [
                         'rows' => 3,
                         'cols' => 60
+                    ]
+                ],
+                'log_type' => [
+                    'type'       => 'select',
+                    'label'      => 'Log Type',
+                    'value'      => [
+                        '--' => '----',
+                        '1'  => 'Failure',
+                        '2'  => 'Success',
+                        '3'  => 'Both'
                     ]
                 ]
             ]
