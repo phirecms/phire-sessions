@@ -5,11 +5,11 @@
 -- --------------------------------------------------------
 
 --
--- Table structure for table "user_session_configs"
+-- Table structure for table "user_session_config"
 --
 
-DROP TABLE IF EXISTS "[{prefix}]user_session_configs" CASCADE;
-CREATE TABLE IF NOT EXISTS "[{prefix}]user_session_configs" (
+DROP TABLE IF EXISTS "[{prefix}]user_session_config" CASCADE;
+CREATE TABLE IF NOT EXISTS "[{prefix}]user_session_config" (
   "role_id" integer,
   "multiple_sessions" integer,
   "allowed_attempts" integer,

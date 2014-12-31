@@ -19,7 +19,7 @@ class SessionConfig extends AbstractModel
      */
     public function getAll($limit = null, $page = null, $sort = null)
     {
-        $sql = Table\UserSessionConfigs::sql();
+        $sql = Table\UserSessionConfig::sql();
         $sql->select([
             'role_id'      => DB_PREFIX . 'user_session_configs.role_id',
             'multiple_sessions'   => DB_PREFIX . 'user_session_configs.multiple_sessions',
@@ -45,8 +45,8 @@ class SessionConfig extends AbstractModel
         $sql->select()->orderBy($by[0], $by[1]);
 
         return (count($params) > 0) ?
-            Table\UserSessionConfigs::execute((string)$sql, $params)->rows() :
-            Table\UserSessionConfigs::query((string)$sql)->rows();
+            Table\UserSessionConfig::execute((string)$sql, $params)->rows() :
+            Table\UserSessionConfig::query((string)$sql)->rows();
     }
 
     /**
@@ -57,7 +57,7 @@ class SessionConfig extends AbstractModel
      */
     public function getById($id)
     {
-        $session = Table\UserSessionConfigs::findById((int)$id);
+        $session = Table\UserSessionConfig::findById((int)$id);
         if (isset($session->role_id)) {
             $this->data['role_id']            = $session->role_id;
             $this->data['multiple_sessions']  = $session->multiple_sessions;
@@ -82,7 +82,7 @@ class SessionConfig extends AbstractModel
      */
     public function save(array $fields)
     {
-        $session = new Table\UserSessionConfigs([
+        $session = new Table\UserSessionConfig([
             'role_id'            => ($fields['role_id'] != '----') ? $fields['role_id'] : null,
             'multiple_sessions'  => (int)$fields['multiple_sessions'],
             'allowed_attempts'   => (int)$fields['allowed_attempts'],
@@ -107,7 +107,7 @@ class SessionConfig extends AbstractModel
      */
     public function update(array $fields)
     {
-        $session = Table\UserSessionConfigs::findById((int)$fields['role_id']);
+        $session = Table\UserSessionConfig::findById((int)$fields['role_id']);
         if (isset($session->role_id)) {
             $session->role_id            = ($fields['role_id'] != '----') ? $fields['role_id'] : null;
             $session->multiple_sessions  = (int)$fields['multiple_sessions'];
@@ -136,7 +136,7 @@ class SessionConfig extends AbstractModel
     {
         if (isset($post['rm_sessions'])) {
             foreach ($post['rm_sessions'] as $id) {
-                $session = Table\UserSessionConfigs::findById((int)$id);
+                $session = Table\UserSessionConfig::findById((int)$id);
                 if (isset($session->role_id)) {
                     $session->delete();
                 }
@@ -152,7 +152,7 @@ class SessionConfig extends AbstractModel
      */
     public function hasPages($limit)
     {
-        return (Table\UserSessionConfigs::findAll()->count() > $limit);
+        return (Table\UserSessionConfig::findAll()->count() > $limit);
     }
 
     /**
@@ -162,7 +162,7 @@ class SessionConfig extends AbstractModel
      */
     public function getCount()
     {
-        return Table\UserSessionConfigs::findAll()->count();
+        return Table\UserSessionConfig::findAll()->count();
     }
 
     /**
@@ -172,6 +172,6 @@ class SessionConfig extends AbstractModel
      */
     public function rolesAvailable()
     {
-        return (Table\UserSessionConfigs::findAll()->count() < \Phire\Table\UserRoles::findAll()->count());
+        return (Table\UserSessionConfig::findAll()->count() < \Phire\Table\UserRoles::findAll()->count());
     }
 }

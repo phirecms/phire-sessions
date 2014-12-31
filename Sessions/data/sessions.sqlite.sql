@@ -14,11 +14,11 @@ PRAGMA foreign_keys = ON;
 -- --------------------------------------------------------
 
 --
--- Table structure for table "user_session_configs"
+-- Table structure for table "user_session_config"
 --
 
-DROP TABLE IF EXISTS "[{prefix}]user_session_configs";
-CREATE TABLE IF NOT EXISTS "[{prefix}]user_session_configs" (
+DROP TABLE IF EXISTS "[{prefix}]user_session_config";
+CREATE TABLE IF NOT EXISTS "[{prefix}]user_session_config" (
   "role_id" integer,
   "multiple_sessions" integer,
   "allowed_attempts" integer,
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_session_configs" (
   CONSTRAINT "fk_user_session_role_id" FOREIGN KEY ("role_id") REFERENCES "[{prefix}]user_roles" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
-CREATE INDEX "sess_role_id" ON "[{prefix}]user_session_configs" ("role_id");
+CREATE INDEX "sess_role_id" ON "[{prefix}]user_session_config" ("role_id");
 
 -- --------------------------------------------------------
 

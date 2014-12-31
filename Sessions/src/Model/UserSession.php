@@ -186,7 +186,7 @@ class UserSession extends AbstractModel
         if (($controller->request()->isPost()) && ($controller->request()->getRequestUri() == BASE_PATH . APP_URI . '/login')) {
             // If the user successfully logged in
             if (isset($sess->user)) {
-                $config = Table\UserSessionConfigs::findById($sess->user->role_id);
+                $config = Table\UserSessionConfig::findById($sess->user->role_id);
                 $data   = Table\UserSessionData::findById($sess->user->id);
                 if (isset($config->role_id)) {
                     if (!self::validate($config, $sess->user, $data)) {
@@ -256,7 +256,7 @@ class UserSession extends AbstractModel
             } else {
                 if ((null !== $controller->view()->form) && (null !== $controller->view()->form->username)) {
                     $user   = \Phire\Table\Users::findBy(['username' => $controller->view()->form->username]);
-                    $config = Table\UserSessionConfigs::findById($user->role_id);
+                    $config = Table\UserSessionConfig::findById($user->role_id);
                     if (isset($user->id)) {
                         $data = Table\UserSessionData::findById($user->id);
                         if (isset($data->user_id)) {

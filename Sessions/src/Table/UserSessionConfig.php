@@ -4,7 +4,7 @@ namespace Sessions\Table;
 
 use Pop\Db\Record;
 
-class UserSessionConfigs extends Record
+class UserSessionConfig extends Record
 {
 
     /**

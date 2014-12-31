@@ -5,11 +5,11 @@
 -- --------------------------------------------------------
 SET FOREIGN_KEY_CHECKS = 0;
 --
--- Table structure for table `user_session_configs`
+-- Table structure for table `user_session_config`
 --
 
-DROP TABLE IF EXISTS `[{prefix}]user_session_configs`;
-CREATE TABLE IF NOT EXISTS `[{prefix}]user_session_configs` (
+DROP TABLE IF EXISTS `[{prefix}]user_session_config`;
+CREATE TABLE IF NOT EXISTS `[{prefix}]user_session_config` (
   `role_id` int(16),
   `multiple_sessions` int(1),
   `allowed_attempts` int(16),

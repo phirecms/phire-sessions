@@ -22,7 +22,7 @@ class SessionConfig extends Form
      */
     public function __construct($id = null, array $fields = null, $action = null, $method = 'post')
     {
-        $configs = \Sessions\Table\UserSessionConfigs::findAll();
+        $configs = \Sessions\Table\UserSessionConfig::findAll();
         $configsAry = [];
 
         foreach ($configs->rows() as $config) {
