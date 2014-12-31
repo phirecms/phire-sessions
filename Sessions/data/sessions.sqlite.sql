@@ -69,4 +69,4 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_sessions" (
 ) ;
 
 INSERT INTO "sqlite_sequence" ("name", "seq") VALUES ('[{prefix}]user_sessions', 4000);
-CREATE INDEX "sess_user_id" ON "[{prefix}]users" ("user_id");
+CREATE INDEX "sess_user_id" ON "[{prefix}]users_sessions" ("user_id");
