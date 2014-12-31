@@ -16,7 +16,7 @@ return [
                 'children' => [
                     'sessions' => [
                         'name' => 'Sessions',
-                        'href' => BASE_PATH . APP_URI . '/users/sessions',
+                        'href' => '/users/sessions',
                         'acl'  => [
                             'resource'   => 'users-sessions',
                             'permission' => 'index'
@@ -27,7 +27,7 @@ return [
         ],
         'nav.module' => [
             'name' => 'Sessions',
-            'href' => BASE_PATH . APP_URI . '/sessions',
+            'href' => '/sessions',
             'acl'  => [
                 'resource'   => 'sessions',
                 'permission' => 'index'
