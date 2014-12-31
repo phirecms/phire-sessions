@@ -55,6 +55,11 @@ return [
             $cookie = \Pop\Web\Cookie::getInstance(['path' => $path]);
             $cookie->delete('phire_session_timeout');
             $cookie->delete('phire_session_path');
+
+            $sess = \Pop\Web\Session::getInstance();
+            if (isset($sess->user) && isset($sess->user->session)) {
+                unset($sess->user->session);
+            }
         }
     ]
 ];
