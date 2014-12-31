@@ -9,6 +9,7 @@ return [
     ],
     'users-sessions' => [
         'index',
+        'logins',
         'remove'
     ]
 ];

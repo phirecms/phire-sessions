@@ -1,38 +1,68 @@
 <?php include $phireHeader; ?>
-    <h1 class="users-header"><?=$title; ?></h1>
-<?php if (count($sessions) > 0): ?>
+<?php if (count($roles) > 0): ?>
+    <form id="user-search-form" action="<?=$phireUri . '/users'; ?>" method="get">
+        <div><input tabindex="3" type="submit" id="submit" value="Search" /></div>
+        <div>
+            <select tabindex="2" id="role_id" name="role_id">
+                <option value="----">----</option>
+<?php foreach ($roles as $id => $role): ?>
+<?php if (($acl->hasResource('user-role-' . $id)) && ($acl->isAllowed($user->role, 'user-role-' . $id, 'index'))): ?>
+                <option value="<?=$id; ?>"<?=(((null !== $roleId) && ($roleId == $id)) ? ' selected="selected"' : null); ?>><?=$role; ?></option>
+<?php endif; ?>
+<?php endforeach; ?>
+            </select>
+        </div>
+        <div><input tabindex="1" type="text" name="username" id="username" value="<?=((null !== $username) ? $username : null); ?>" placeholder="Username" size="15" /></div>
+    </form>
+<?php endif; ?>
+    <h1 class="users-header"><?=$title; ?><?php if (isset($roleId) && isset($roles) && isset($roles[$roleId])): ?> : <?=$roles[$roleId]; ?><?php endif; ?></h1>
+<?php if (count($users) > 0): ?>
 <?php if (null !== $pages): ?>
     <div class="page-links"><?=$pages; ?></div>
 <?php endif; ?>
-<?php if ($acl->isAllowed($user->role, 'users-sessions', 'remove')): ?>
-    <form id="users-sessions-form" action="<?=$phireUri . '/users/sessions/remove'; ?>" method="post">
+<?php if ($acl->isAllowed($user->role, 'users', 'add')): ?>
+    <nav id="sub-nav">
+        <nav><a href="<?=$phireUri . '/users/add'; ?>">+ Add</a></nav>
+    </nav>
+<?php endif; ?>
+<?php if ($acl->isAllowed($user->role, 'users', 'remove')): ?>
+    <form id="users-form" action="<?=$phireUri . '/users/remove'; ?>" method="post">
 <?php endif; ?>
         <table class="data-table" cellpadding="0" cellspacing="0" border="0">
             <tr>
-                <th><a href="<?=$phireUri . '/users/sessions?sort=id';?>">#</a></th>
-                <th><a href="<?=$phireUri . '/users/sessions?sort=username';?>">Username</a></th>
-                <th>IP</th>
-                <th>User Agent</th>
-                <th><a href="<?=$phireUri . '/users/sessions?sort=start';?>">Start</a></th>
-                <th class="text-center"><?php if ($acl->isAllowed($user->role, 'users-sessions', 'remove')): ?><input type="checkbox" name="checkall" id="checkall" value="rm_sessions" /><?php else: ?>&nbsp;<?php endif; ?></th>
+                <th><a href="<?=$phireUri . '/users' . ((null !== $roleId) ? '/' . $roleId : null) . '?sort=id';?>">#</a></th>
+                <th><a href="<?=$phireUri . '/users' . ((null !== $roleId) ? '/' . $roleId : null) . '?sort=username';?>">Username</a></th>
+                <th><a href="<?=$phireUri . '/users' . ((null !== $roleId) ? '/' . $roleId : null) . '?sort=email';?>">Email</a></th>
+                <th><a href="<?=$phireUri . '/users' . ((null !== $roleId) ? '/' . $roleId : null) . '?sort=role_name';?>">Role</a></th>
+                <th><a href="<?=$phireUri . '/users' . ((null !== $roleId) ? '/' . $roleId : null) . '?sort=verified';?>">Verified</a></th>
+                <th>Last Login</th>
+                <th class="text-center"><?php if ($acl->isAllowed($user->role, 'users', 'edit')): ?>Edit<?php else: ?>&nbsp;<?php endif; ?></th>
+                <th class="text-center"><?php if ($acl->isAllowed($user->role, 'users', 'remove')): ?><input type="checkbox" name="checkall" id="checkall" value="rm_users" /><?php else: ?>&nbsp;<?php endif; ?></th>
             </tr>
 <?php $i = 1; ?>
-<?php foreach ($sessions as $session): ?>
+<?php foreach ($users as $u): ?>
             <tr>
-                <td><?=$session->id; ?></td>
-                <td><?=$session->username; ?></td>
-                <td><?=$session->ip; ?></td>
-                <td><?=$session->ua; ?></td>
-                <td><?=date('M j Y H:i:s', $session->start); ?></td>
-                <td class="text-center"><?php if (($user->session->id != $session->id) && ($acl->isAllowed($user->role, 'users-sessions', 'remove'))): ?><input type="checkbox" name="rm_sessions[]" id="rm_sessions<?=$i++; ?>" value="<?=$session->id; ?>" /><?php else: ?>&nbsp;<?php endif; ?></td>
+                <td><?=$u->id; ?></td>
+                <td><?=$u->username; ?></td>
+                <td><?=$u->email; ?></td>
+                <td><?=(!empty($u->role_name) ? $u->role_name : '[Blocked]'); ?></td>
+                <td><?=(($u->verified) ? 'Yes' : 'No'); ?></td>
+                <td><?=(null !== $u->last_login) ? date('M j Y H:i:s', $u->last_login) : 'N/A'; ?> &nbsp; <?=(null !== $u->last_ip) ? '[' . $u->last_ip . ']' : null; ?> &nbsp; <?php if ($acl->isAllowed($user->role, 'users-sessions', 'logins')): ?><a href="<?=$phireUri . '/users/logins/' . $u->id; ?>"><?=(count($u->logins)); ?></a><?php else: ?><?=(count($u->logins)); ?><?php endif; ?></td>
+                <td><?php if (($acl->isAllowed($user->role, 'users', 'edit') && ($acl->isAllowed($user->role, 'user-role-' . $u->role_id, 'edit')))): ?><a class="edit-link" href="<?=$phireUri . '/users/edit/' . $u->id; ?>">Edit</a><?php else: ?>&nbsp;<?php endif; ?></td>
+                <td class="text-center"><?php if (($user->id != $u->id) && ($acl->isAllowed($user->role, 'users', 'remove')) && ($acl->isAllowed($user->role, 'user-role-' . $u->role_id, 'remove'))): ?><input type="checkbox" name="rm_users[]" id="rm_users<?=$i++; ?>" value="<?=$u->id; ?>" /><?php else: ?>&nbsp;<?php endif; ?></td>
             </tr>
 <?php endforeach; ?>
         </table>
-<?php if ($acl->isAllowed($user->role, 'users-sessions', 'remove')): ?>
+<?php if ($acl->isAllowed($user->role, 'users', 'remove')): ?>
         <div id="form-footer"><input type="submit" name="submit" class="process-btn" value="Remove" /></div>
     </form>
 <?php endif; ?>
 <?php else: ?>
-    <p>There are currently no sessions.</p>
+<?php if ($acl->isAllowed($user->role, 'users', 'add')): ?>
+    <nav id="sub-nav">
+        <nav><a href="<?=$phireUri . '/users/add'; ?>">+ Add</a></nav>
+    </nav>
+<?php endif; ?>
+    <p>There are currently no users.</p>
 <?php endif; ?>
 <?php include $phireFooter; ?>

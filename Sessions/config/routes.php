@@ -44,10 +44,18 @@ return [
         ],
         '/users/sessions[/]' => [
             'controller' => 'Sessions\Controller\Users\IndexController',
-            'action'     => 'index',
+            'action'     => 'sessions',
             'acl'        => [
                 'resource'   => 'users-sessions',
-                'permission' => 'index'
+                'permission' => 'sessions'
+            ]
+        ],
+        '/users/logins/:id' => [
+            'controller' => 'Sessions\Controller\Users\IndexController',
+            'action'     => 'logins',
+            'acl'        => [
+                'resource'   => 'users-sessions',
+                'permission' => 'logins'
             ]
         ],
         '/users/sessions/remove' => [

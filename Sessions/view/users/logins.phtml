@@ -1,0 +1,37 @@
+<?php include $phireHeader; ?>
+    <h1 class="users-header"><?=$title; ?> : <?=$username; ?></h1>
+<?php if ($acl->isAllowed($user->role, 'users-sessions', 'remove')): ?>
+<form id="users-logins-form" action="<?=$phireUri . '/users/logins/' . $user_id; ?>" method="post">
+    <div id="form-footer" style="float: right;">
+        <input type="submit" name="submit" class="process-btn" value="Clear" />
+        <input type="text" name="failed_attempts" value="<?=$failed_attempts; ?>" size="3" style="text-align: center; float: right; margin: 0 10px 0 0; padding: 3px 1px 4px 1px;" />
+        <span style="display: inline-block; margin: 4px 10px 0 0;">Failed Attempts:</span>
+        <input type="hidden" name="user_id" value="<?=$user_id; ?>" />
+    </div>
+<?php endif; ?>
+    <nav id="sub-nav">
+        <nav><a href="<?=$phireUri . '/users'; ?>">Back</a></nav>
+    </nav>
+<?php if (count($logins) > 0): ?>
+        <table class="data-table" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+                <th>Timestamp</th>
+                <th>IP Address</th>
+                <th>User Agent</th>
+            </tr>
+<?php $i = 1; ?>
+<?php foreach ($logins as $timestamp => $login): ?>
+            <tr>
+                <td><?=date('M j Y H:i:s', $timestamp); ?></td>
+                <td><?=$login['ip']; ?></td>
+                <td><?=$login['ua']; ?></td>
+            </tr>
+<?php endforeach; ?>
+        </table>
+<?php else: ?>
+        <p>There are currently no logins.</p>
+<?php endif; ?>
+<?php if ($acl->isAllowed($user->role, 'users-sessions', 'remove')): ?>
+    </form>
+<?php endif; ?>
+<?php include $phireFooter; ?>

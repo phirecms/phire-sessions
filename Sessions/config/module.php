@@ -39,6 +39,10 @@ return [
                 'action' => 'Sessions\Model\UserSession::login'
             ],
             [
+                'name'   => 'app.send',
+                'action' => 'Sessions\Model\UserSession::users'
+            ],
+            [
                 'name'   => 'app.dispatch.pre',
                 'action' => 'Sessions\Model\UserSession::logout'
             ]

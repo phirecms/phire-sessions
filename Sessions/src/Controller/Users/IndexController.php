@@ -11,11 +11,11 @@ class IndexController extends AbstractController
 {
 
     /**
-     * Index action method
+     * Sessions action method
      *
      * @return void
      */
-    public function index()
+    public function sessions()
     {
         $session = new Model\UserSession();
 
@@ -28,11 +28,38 @@ class IndexController extends AbstractController
             $pages = null;
         }
 
-        $this->prepareView('users/index.phtml');
+        $this->prepareView('users/sessions.phtml');
         $this->view->title    = 'Users : Sessions';
         $this->view->pages    = $pages;
         $this->view->sessions = $session->getAll($limit, $this->request->getQuery('page'), $this->request->getQuery('sort'));
         $this->send();
+    }
+
+    /**
+     * Logins action method
+     *
+     * @param  int $id
+     * @return void
+     */
+    public function logins($id)
+    {
+        $session = new Model\UserSession();
+        if ($this->request->isPost()) {
+            $session->clear($this->request->getPost());
+            Response::redirect(BASE_PATH . APP_URI . '/users/logins/' . $id . '?removed=' . time());
+            exit();
+        } else {
+            $session = new Model\UserSession();
+            $session->getUserData($id);
+
+            $this->prepareView('users/logins.phtml');
+            $this->view->title           = 'Users : Logins';
+            $this->view->logins          = $session->logins;
+            $this->view->failed_attempts = $session->failed_attempts;
+            $this->view->username        = $session->username;
+            $this->view->user_id         = $session->user_id;
+            $this->send();
+        }
     }
 
     /**

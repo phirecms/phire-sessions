@@ -49,6 +49,33 @@ class UserSession extends AbstractModel
     }
 
     /**
+     * Get user session data
+     *
+     * @param  int $id
+     * @return array
+     */
+    public function getUserData($id)
+    {
+        $user     = \Phire\Table\Users::findById($id);
+        $userData = Table\UserSessionData::findById($id);
+
+        if (isset($userData->user_id)) {
+            $data = $userData->getColumns();
+            if (null !== $data['logins']) {
+                $this->data['logins'] = unserialize($data['logins']);
+                krsort($this->data['logins']);
+            }
+            $this->data['failed_attempts'] = $data['failed_attempts'];
+        } else {
+            $this->data['logins']          = [];
+            $this->data['failed_attempts'] = 0;
+        }
+
+        $this->data['username'] = $user->username;
+        $this->data['user_id']  = $id;
+    }
+
+    /**
      * Remove a user session
      *
      * @param  array $post
@@ -62,6 +89,24 @@ class UserSession extends AbstractModel
                 if (isset($session->id)) {
                     $session->delete();
                 }
+            }
+        }
+    }
+
+    /**
+     * Clear user data
+     *
+     * @param  array $post
+     * @return void
+     */
+    public function clear(array $post)
+    {
+        if (isset($post['user_id'])) {
+            $session = Table\UserSessionData::findById((int)$post['user_id']);
+            if (isset($session->user_id)) {
+                $session->logins = null;
+                $session->failed_attempts = (int)$post['failed_attempts'];
+                $session->save();
             }
         }
     }
@@ -85,6 +130,37 @@ class UserSession extends AbstractModel
     public function getCount()
     {
         return Table\UserSessions::findAll()->count();
+    }
+
+    /**
+     * Alter user list view
+     *
+     * @param  \Phire\Controller\AbstractController $controller
+     * @param  \Phire\Application                   $application
+     * @return void
+     */
+    public static function users(\Phire\Controller\AbstractController $controller, \Phire\Application $application)
+    {
+        if ($controller->request()->getRequestUri() == BASE_PATH . APP_URI . '/users') {
+            if (isset($controller->view()->users) && count($controller->view()->users > 0)) {
+                $controller->view()->setTemplate(__DIR__ . '/../../view/users/index.phtml');
+                foreach ($controller->view()->users as $user) {
+                    $userData = Table\UserSessionData::findById($user->id);
+                    if (isset($userData->user_id)) {
+                        $user->logins = (null !== $userData->logins) ? unserialize($userData->logins) : [];
+                        if (count($user->logins) > 0) {
+                            end($user->logins);
+                            $user->last_login = key($user->logins);
+                            $user->last_ip    = $user->logins[$user->last_login]['ip'];
+                            reset($user->logins);
+                        } else {
+                            $user->last_login = null;
+                            $user->last_ip    = null;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
