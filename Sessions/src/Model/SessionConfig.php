@@ -21,16 +21,16 @@ class SessionConfig extends AbstractModel
     {
         $sql = Table\UserSessionConfig::sql();
         $sql->select([
-            'role_id'      => DB_PREFIX . 'user_session_configs.role_id',
-            'multiple_sessions'   => DB_PREFIX . 'user_session_configs.multiple_sessions',
-            'allowed_attempts'    => DB_PREFIX . 'user_session_configs.allowed_attempts',
-            'session_expiration'  => DB_PREFIX . 'user_session_configs.session_expiration',
-            'timeout_warning'     => DB_PREFIX . 'user_session_configs.timeout_warning',
-            'ip_allowed'          => DB_PREFIX . 'user_session_configs.ip_allowed',
-            'ip_blocked'          => DB_PREFIX . 'user_session_configs.ip_blocked',
-            'log_emails'          => DB_PREFIX . 'user_session_configs.log_emails',
+            'role_id'      => DB_PREFIX . 'user_session_config.role_id',
+            'multiple_sessions'   => DB_PREFIX . 'user_session_config.multiple_sessions',
+            'allowed_attempts'    => DB_PREFIX . 'user_session_config.allowed_attempts',
+            'session_expiration'  => DB_PREFIX . 'user_session_config.session_expiration',
+            'timeout_warning'     => DB_PREFIX . 'user_session_config.timeout_warning',
+            'ip_allowed'          => DB_PREFIX . 'user_session_config.ip_allowed',
+            'ip_blocked'          => DB_PREFIX . 'user_session_config.ip_blocked',
+            'log_emails'          => DB_PREFIX . 'user_session_config.log_emails',
             'role'                => DB_PREFIX . 'user_roles.name'
-        ])->join(DB_PREFIX . 'user_roles', [DB_PREFIX . 'user_roles.id' => DB_PREFIX . 'user_session_configs.role_id']);
+        ])->join(DB_PREFIX . 'user_roles', [DB_PREFIX . 'user_roles.id' => DB_PREFIX . 'user_session_config.role_id']);
 
         if (null !== $limit) {
             $page = ((null !== $page) && ((int)$page > 1)) ?
