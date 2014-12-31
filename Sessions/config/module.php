@@ -46,6 +46,15 @@ return [
                 'name'   => 'app.dispatch.pre',
                 'action' => 'Sessions\Model\UserSession::logout'
             ]
-        ]
+        ],
+        'uninstall' => function(){
+            $path = BASE_PATH . APP_URI;
+            if ($path == '') {
+                $path = '/';
+            }
+            $cookie = \Pop\Web\Cookie::getInstance(['path' => $path]);
+            $cookie->delete('phire_session_timeout');
+            $cookie->delete('phire_session_path');
+        }
     ]
 ];
