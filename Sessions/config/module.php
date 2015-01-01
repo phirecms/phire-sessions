@@ -64,6 +64,7 @@ return [
             if (isset($sess->user) && isset($sess->user->session)) {
                 unset($sess->user->session);
             }
-        }
+        },
+        'limit' => 500
     ]
 ];

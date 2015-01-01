@@ -151,10 +151,9 @@ class UserSession extends AbstractModel
      * Alter user list view
      *
      * @param  \Phire\Controller\AbstractController $controller
-     * @param  \Phire\Application                   $application
      * @return void
      */
-    public static function users(\Phire\Controller\AbstractController $controller, \Phire\Application $application)
+    public static function users(\Phire\Controller\AbstractController $controller)
     {
         if ($controller->request()->getRequestUri() == BASE_PATH . APP_URI . '/users') {
             if (isset($controller->view()->users) && count($controller->view()->users > 0)) {
@@ -225,10 +224,15 @@ class UserSession extends AbstractModel
                         exit();
                     } else {
                         if (isset($data->user_id)) {
-                            $logins         = unserialize($data->logins);
+                            $limit  = (int)$application->module('Sessions')['limit'];
+                            $logins = unserialize($data->logins);
+                            if (($limit > 0) && (count($logins) >= $limit)) {
+                                reset($logins);
+                                unset($logins[key($logins)]);
+                            }
                             $logins[time()] = [
-                                'ua'  => $_SERVER['HTTP_USER_AGENT'],
-                                'ip'  => $_SERVER['REMOTE_ADDR']
+                                'ua' => $_SERVER['HTTP_USER_AGENT'],
+                                'ip' => $_SERVER['REMOTE_ADDR']
                             ];
                             $data->failed_attempts = 0;
                             $data->logins          = serialize($logins);

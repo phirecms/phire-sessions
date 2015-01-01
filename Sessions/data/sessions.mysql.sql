@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]user_session_config` (
 DROP TABLE IF EXISTS `[{prefix}]user_session_data`;
 CREATE TABLE IF NOT EXISTS `[{prefix}]user_session_data` (
   `user_id` int(16),
-  `logins` text,
+  `logins` longtext,
   `failed_attempts` int(16),
   UNIQUE (`user_id`),
   CONSTRAINT `fk_sess_data_user_id` FOREIGN KEY (`user_id`) REFERENCES `[{prefix}]users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE

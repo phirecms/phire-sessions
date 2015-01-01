@@ -54,9 +54,24 @@ class IndexController extends AbstractController
             $session = new Model\UserSession();
             $session->getUserData($id);
 
+            if (count($session->logins) > $this->config->pagination) {
+                $page  = $this->request->getQuery('page');
+                $limit = $this->config->pagination;
+                $pages = new Paginator(count($session->logins), $limit);
+                $pages->useInput(true);
+
+                $offset = ((null !== $page) && ((int)$page > 1)) ?
+                    ($page * $limit) - $limit : 0;
+                $logins = array_slice($session->logins, $offset, $limit, true);
+            } else {
+                $pages  = null;
+                $logins = $session->logins;
+            }
+
             $this->prepareView('users/logins.phtml');
             $this->view->title           = 'Users : Logins';
-            $this->view->logins          = $session->logins;
+            $this->view->pages           = $pages;
+            $this->view->logins          = $logins;
             $this->view->failed_attempts = $session->failed_attempts;
             $this->view->username        = $session->username;
             $this->view->user_id         = $session->user_id;
