@@ -142,8 +142,7 @@ class UserSession extends AbstractModel
     public static function header(\Phire\Controller\AbstractController $controller, \Phire\Application $application)
     {
         $sess = $application->getService('session');
-        if (isset($sess->user) && isset($sess->user->session) && ($controller->hasView())) {
-            $controller->view()->lastSession = 123;
+        if (isset($sess->user) && ($controller->hasView())) {
             $controller->view()->phireHeader = __DIR__ . '/../../view/header.phtml';
         }
     }
