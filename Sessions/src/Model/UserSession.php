@@ -171,6 +171,10 @@ class UserSession extends AbstractModel
                             $user->last_login = null;
                             $user->last_ip    = null;
                         }
+                    } else {
+                        $user->logins     = [];
+                        $user->last_login = null;
+                        $user->last_ip    = null;
                     }
                 }
             }
