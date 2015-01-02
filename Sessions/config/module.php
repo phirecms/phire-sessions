@@ -44,6 +44,10 @@ return [
             ],
             [
                 'name'   => 'app.send',
+                'action' => 'Sessions\Model\UserSession::dashboard'
+            ],
+            [
+                'name'   => 'app.send',
                 'action' => 'Sessions\Model\UserSession::users'
             ],
             [
@@ -65,6 +69,8 @@ return [
                 unset($sess->user->session);
             }
         },
-        'limit' => 500
+        'clear_sessions'           => 86400,
+        'multiple_session_warning' => false,
+        'login_limit'              => 500
     ]
 ];

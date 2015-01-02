@@ -148,6 +148,34 @@ class UserSession extends AbstractModel
     }
 
     /**
+     * Dashboard check to display multiple sessions warning
+     *
+     * @param  \Phire\Controller\AbstractController $controller
+     * @param  \Phire\Application                   $application
+     * @return void
+     */
+    public static function dashboard(\Phire\Controller\AbstractController $controller, \Phire\Application $application)
+    {
+        if (($controller->request()->getRequestUri() == BASE_PATH . APP_URI) &&
+            isset($application->module('Sessions')['multiple_session_warning']) &&
+            ($application->module('Sessions')['multiple_session_warning'])) {
+
+            $sess = $application->getService('session');
+            if (isset($sess->user) && isset($sess->user->session)) {
+                $sql = Table\UserSessions::sql();
+                $sql->select()->where('user_id = :user_id')->where('id != :id');
+                $session = Table\UserSessions::execute((string)$sql, [
+                    'user_id' => $sess->user->id,
+                    'id'      => $sess->user->session->id
+                ]);
+                if (isset($session->id)) {
+                    $controller->view()->sessionWarning = true;
+                }
+            }
+        }
+    }
+
+    /**
      * Alter user list view
      *
      * @param  \Phire\Controller\AbstractController $controller
@@ -228,7 +256,7 @@ class UserSession extends AbstractModel
                         exit();
                     } else {
                         if (isset($data->user_id)) {
-                            $limit  = (int)$application->module('Sessions')['limit'];
+                            $limit  = (int)$application->module('Sessions')['login_limit'];
                             $logins = unserialize($data->logins);
                             if (($limit > 0) && (count($logins) >= $limit)) {
                                 reset($logins);
@@ -275,6 +303,15 @@ class UserSession extends AbstractModel
                             $lastIp    = $logins[$timestamp]['ip'];
                         }
                     }
+                }
+
+                // Clear old sessions
+                $clear  = (int)$application->module('Sessions')['clear_sessions'];
+                if ($clear > 0) {
+                    $clear = time() - $clear;
+                    $sql   = Table\UserSessions::sql();
+                    $sql->delete()->where(['start <= :start']);
+                    Table\UserSessions::execute((string)$sql, ['start' => $clear]);
                 }
 
                 $session = new Table\UserSessions([
@@ -351,6 +388,15 @@ class UserSession extends AbstractModel
     public static function logout(\Phire\Application $application)
     {
         if ($application->router()->getRouteMatch()->getRoute() == BASE_PATH . APP_URI . '/logout') {
+            $path = BASE_PATH . APP_URI;
+            if ($path == '') {
+                $path = '/';
+            }
+            $cookie = Cookie::getInstance(['path' => $path]);
+            $cookie->delete('phire_session_timeout');
+            $cookie->delete('phire_session_path');
+            $cookie->delete('phire_session_warning_dismiss');
+
             $sess = $application->getService('session');
             if (isset($sess->user) && isset($sess->user->session)) {
                 $session = Table\UserSessions::findById((int)$sess->user->session->id);

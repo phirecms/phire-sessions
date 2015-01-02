@@ -2,6 +2,24 @@
  * Sessions Module Scripts for Phire CMS 2
  */
 
+phire.sessionWarning = function(path, domain) {
+    if (jax.cookie.load('phire_session_warning_dismiss') != 1) {
+        jax('body').append('div', {"id": "session-warning"});
+        jax('#session-warning').css('opacity', 0);
+        jax('#session-warning').val(
+            'Someone else is currently logged in with the same username. [ <a id="session-warning-dismiss" href="#">Dismiss</a> ]'
+        );
+        jax('#session-warning').fade(100, {tween: 10, speed: 200});
+        jax('#session-warning-dismiss').click(function(){
+            jax.cookie.save('phire_session_warning_dismiss', 1, {"path" : path, "domain" : domain});
+            phire.clear = setTimeout(function(){
+                phire.clearStatus('#session-warning');
+            }, 1);
+            return false;
+        });
+    }
+};
+
 jax(document).ready(function(){
     if ((jax.query('failed') != undefined) || (jax.query('expired') != undefined)) {
         jax('body').append('div', {"id" : "session-failure"});

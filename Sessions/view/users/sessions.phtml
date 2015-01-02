@@ -17,13 +17,25 @@
                 <th class="text-center"><?php if ($acl->isAllowed($user->role, 'users-sessions', 'remove')): ?><input type="checkbox" name="checkall" id="checkall" value="rm_sessions" /><?php else: ?>&nbsp;<?php endif; ?></th>
             </tr>
 <?php $i = 1; ?>
-<?php foreach ($sessions as $session): ?>
+<?php
+foreach ($sessions as $session):
+    $ago = time() - $session->start;
+    if ($ago < 60):
+        $ago = '< 1 minute ago';
+    elseif (($ago >= 60) && ($ago < 3600)):
+        $minutes = round($ago / 60);
+        $ago     = $minutes . ' minute' . (($minutes > 1) ? 's' : '') . ' ago';
+    else:
+        $hours = round($ago / 3600);
+        $ago   = $hours . ' hour' . (($hours > 1) ? 's' : '') . ' ago';
+    endif;
+?>
             <tr>
                 <td><?=$session->id; ?></td>
                 <td><?=$session->username; ?></td>
                 <td><?=$session->ip; ?></td>
                 <td><?=$session->ua; ?></td>
-                <td><?=date('M j Y H:i:s', $session->start); ?></td>
+                <td><?=date('M j Y H:i:s', $session->start); ?> [ <?=$ago; ?> ]</td>
                 <td class="text-center"><?php if (($user->session->id != $session->id) && ($acl->isAllowed($user->role, 'users-sessions', 'remove'))): ?><input type="checkbox" name="rm_sessions[]" id="rm_sessions<?=$i++; ?>" value="<?=$session->id; ?>" /><?php else: ?>&nbsp;<?php endif; ?></td>
             </tr>
 <?php endforeach; ?>
