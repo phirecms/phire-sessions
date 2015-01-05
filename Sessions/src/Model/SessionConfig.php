@@ -50,7 +50,7 @@ class SessionConfig extends AbstractModel
     }
 
     /**
-     * Get user by ID
+     * Get session config by ID
      *
      * @param  int $id
      * @return void
@@ -76,7 +76,7 @@ class SessionConfig extends AbstractModel
     }
 
     /**
-     * Save new user
+     * Save new session config
      *
      * @param  array $fields
      * @return void
@@ -101,7 +101,7 @@ class SessionConfig extends AbstractModel
     }
 
     /**
-     * Update an existing user
+     * Update an existing session config
      *
      * @param  array $fields
      * @return void
