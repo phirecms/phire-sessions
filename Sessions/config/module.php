@@ -11,6 +11,7 @@ return [
         'src'        => __DIR__ . '/../src',
         'routes'     => include 'routes.php',
         'resources'  => include 'resources.php',
+        'forms'      => include 'forms.php',
         'nav.phire'  => [
             'users' => [
                 'children' => [
