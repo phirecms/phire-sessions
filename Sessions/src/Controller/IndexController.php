@@ -52,7 +52,7 @@ class IndexController extends AbstractController
             $this->prepareView('add.phtml');
             $this->view->title = 'Modules : Sessions : Add';
 
-            $form = new Form\SessionConfig();
+            $form = new Form\SessionConfig(null, $this->application->config()['forms']['Sessions\Form\SessionConfig']);
 
             if ($this->request->isPost()) {
                 $form->addFilter('strip_tags')
@@ -95,7 +95,7 @@ class IndexController extends AbstractController
         $this->view->role           = $session->role;
         $this->view->rolesAvailable = $session->rolesAvailable();
 
-        $form = new Form\SessionConfig($id);
+        $form = new Form\SessionConfig($id, $this->application->config()['forms']['Sessions\Form\SessionConfig']);
         $form->addFilter('htmlentities', [ENT_QUOTES, 'UTF-8'])
              ->setFieldValues($session->toArray());
 
