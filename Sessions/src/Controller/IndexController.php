@@ -51,25 +51,24 @@ class IndexController extends AbstractController
             $this->prepareView('add.phtml');
             $this->view->title = 'Modules : Sessions : Add';
 
-            $form = new Form\SessionConfig(null, $this->application->config()['forms']['Sessions\Form\SessionConfig']);
+            $this->view->form = new Form\SessionConfig(null, $this->application->config()['forms']['Sessions\Form\SessionConfig']);
 
             if ($this->request->isPost()) {
-                $form->addFilter('strip_tags')
+                $this->view->form->addFilter('strip_tags')
                     ->addFilter('htmlentities', [ENT_QUOTES, 'UTF-8'])
                     ->setFieldValues($this->request->getPost());
 
-                if ($form->isValid()) {
-                    $form->clearFilters()
+                if ($this->view->form->isValid()) {
+                    $this->view->form->clearFilters()
                         ->addFilter('html_entity_decode', [ENT_QUOTES, 'UTF-8'])
                         ->filter();
                     $session = new Model\SessionConfig();
-                    $session->save($form->getFields());
+                    $session->save($this->view->form->getFields());
                     $this->view->id = $session->role_id;
                     $this->redirect(BASE_PATH . APP_URI . '/sessions/edit/' . $session->role_id . '?saved=' . time());
                 }
             }
 
-            $this->view->form = $form;
             $this->send();
         } else {
             $this->redirect(BASE_PATH . APP_URI . '/sessions');
@@ -92,26 +91,25 @@ class IndexController extends AbstractController
         $this->view->role           = $session->role;
         $this->view->rolesAvailable = $session->rolesAvailable();
 
-        $form = new Form\SessionConfig($id, $this->application->config()['forms']['Sessions\Form\SessionConfig']);
-        $form->addFilter('htmlentities', [ENT_QUOTES, 'UTF-8'])
+        $this->view->form = new Form\SessionConfig($id, $this->application->config()['forms']['Sessions\Form\SessionConfig']);
+        $this->view->form->addFilter('htmlentities', [ENT_QUOTES, 'UTF-8'])
              ->setFieldValues($session->toArray());
 
         if ($this->request->isPost()) {
-            $form->addFilter('strip_tags')
+            $this->view->form->addFilter('strip_tags')
                  ->setFieldValues($this->request->getPost());
 
-            if ($form->isValid()) {
-                $form->clearFilters()
+            if ($this->view->form->isValid()) {
+                $this->view->form->clearFilters()
                      ->addFilter('html_entity_decode', [ENT_QUOTES, 'UTF-8'])
                      ->filter();
                 $session = new Model\SessionConfig();
-                $session->update($form->getFields());
+                $session->update($this->view->form->getFields());
                 $this->view->id = $session->role_id;
                 $this->redirect(BASE_PATH . APP_URI . '/sessions/edit/' . $session->role_id . '?saved=' . time());
             }
         }
 
-        $this->view->form = $form;
         $this->send();
     }
 
