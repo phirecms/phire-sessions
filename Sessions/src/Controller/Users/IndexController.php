@@ -4,7 +4,6 @@ namespace Sessions\Controller\Users;
 
 use Sessions\Model;
 use Phire\Controller\AbstractController;
-use Pop\Http\Response;
 use Pop\Paginator\Paginator;
 
 class IndexController extends AbstractController
@@ -48,8 +47,7 @@ class IndexController extends AbstractController
         $session = new Model\UserSession();
         if ($this->request->isPost()) {
             $session->clear($this->request->getPost());
-            Response::redirect(BASE_PATH . APP_URI . '/users/logins/' . $id . '?removed=' . time());
-            exit();
+            $this->redirect(BASE_PATH . APP_URI . '/users/logins/' . $id . '?removed=' . time());
         } else {
             $session = new Model\UserSession();
             $session->getUserData($id);
@@ -90,7 +88,7 @@ class IndexController extends AbstractController
             $session = new Model\UserSession();
             $session->remove($this->request->getPost());
         }
-        Response::redirect(BASE_PATH . APP_URI . '/users/sessions?removed=' . time());
+        $this->redirect(BASE_PATH . APP_URI . '/users/sessions?removed=' . time());
     }
 
     /**

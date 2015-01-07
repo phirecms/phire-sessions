@@ -6,7 +6,6 @@ use Sessions\Model;
 use Sessions\Form;
 use Sessions\Table;
 use Phire\Controller\AbstractController;
-use Pop\Http\Response;
 use Pop\Paginator\Paginator;
 
 class IndexController extends AbstractController
@@ -66,16 +65,14 @@ class IndexController extends AbstractController
                     $session = new Model\SessionConfig();
                     $session->save($form->getFields());
 
-                    Response::redirect(BASE_PATH . APP_URI . '/sessions/edit/' . $session->role_id . '?saved=' . time());
-                    exit();
+                    $this->redirect(BASE_PATH . APP_URI . '/sessions/edit/' . $session->role_id . '?saved=' . time());
                 }
             }
 
             $this->view->form = $form;
             $this->send();
         } else {
-            Response::redirect(BASE_PATH . APP_URI . '/sessions');
-            exit();
+            $this->redirect(BASE_PATH . APP_URI . '/sessions');
         }
     }
 
@@ -109,9 +106,7 @@ class IndexController extends AbstractController
                      ->filter();
                 $session = new Model\SessionConfig();
                 $session->update($form->getFields());
-
-                Response::redirect(BASE_PATH . APP_URI . '/sessions/edit/' . $session->role_id . '?saved=' . time());
-                exit();
+                $this->redirect(BASE_PATH . APP_URI . '/sessions/edit/' . $session->role_id . '?saved=' . time());
             }
         }
 
@@ -130,7 +125,7 @@ class IndexController extends AbstractController
             $session = new Model\SessionConfig();
             $session->remove($this->request->getPost());
         }
-        Response::redirect(BASE_PATH . APP_URI . '/sessions?removed=' . time());
+        $this->redirect(BASE_PATH . APP_URI . '/sessions?removed=' . time());
     }
 
     /**
