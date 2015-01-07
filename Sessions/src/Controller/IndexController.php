@@ -64,7 +64,7 @@ class IndexController extends AbstractController
                         ->filter();
                     $session = new Model\SessionConfig();
                     $session->save($form->getFields());
-
+                    $this->view->id = $session->role_id;
                     $this->redirect(BASE_PATH . APP_URI . '/sessions/edit/' . $session->role_id . '?saved=' . time());
                 }
             }
@@ -106,6 +106,7 @@ class IndexController extends AbstractController
                      ->filter();
                 $session = new Model\SessionConfig();
                 $session->update($form->getFields());
+                $this->view->id = $session->role_id;
                 $this->redirect(BASE_PATH . APP_URI . '/sessions/edit/' . $session->role_id . '?saved=' . time());
             }
         }
