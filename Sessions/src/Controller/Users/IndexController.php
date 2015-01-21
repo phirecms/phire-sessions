@@ -70,6 +70,7 @@ class IndexController extends AbstractController
             $this->view->title           = 'Users : Logins';
             $this->view->pages           = $pages;
             $this->view->logins          = $logins;
+            $this->view->total_logins    = count($session->logins);
             $this->view->failed_attempts = $session->failed_attempts;
             $this->view->username        = $session->username;
             $this->view->user_id         = $session->user_id;

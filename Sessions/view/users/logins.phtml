@@ -26,14 +26,25 @@
     <nav id="sub-nav">
         <nav><a href="<?=$phireUri . '/users'; ?>">Back</a></nav>
     </nav>
-    <p>There are currently no logins.</p>
+    <table class="data-table" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+            <th>Timestamp</th>
+            <th>IP Address</th>
+            <th>User Agent</th>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <p>There are currently no logins.</p>
+            </td>
+        </tr>
+    </table>
 <?php endif; ?>
 <?php if ($acl->isAllowed($user->role, 'users-sessions', 'remove')): ?>
     <form id="users-logins-form" action="<?=$phireUri . '/users/logins/' . $user_id; ?>" method="post">
         <div id="form-footer" style="float: right;">
             <input type="submit" name="submit" class="process-btn" value="Clear" />
-            <input type="text" name="failed_attempts" value="<?=$failed_attempts; ?>" size="3" style="text-align: center; float: right; margin: 0 10px 0 0; padding: 3px 1px 4px 1px;" />
-            <span style="display: inline-block; margin: 4px 10px 0 0;">Failed Attempts:</span>
+            <span style="display: inline-block; margin: 4px 15px 0 0; padding: 0 15px 0 0; border-right: solid 1px #aaa;">Clear Logins? (<?=$total_logins; ?>) <input style="float: right; margin: 4px 0 0 4px;" type="checkbox" name="clear_logins" value="1" /></span>
+            <span style="display: inline-block; margin: 4px 15px 0 0; padding: 0 15px 0 0;">Clear Failed Attempts? (<?=$failed_attempts; ?>) <input style="float: right; margin: 4px 0 0 4px;" type="checkbox" name="clear_failed_attempts" value="1" /></span>
             <input type="hidden" name="user_id" value="<?=$user_id; ?>" />
         </div>
     </form>

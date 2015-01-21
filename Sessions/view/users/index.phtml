@@ -22,7 +22,7 @@
 <?php endif; ?>
 <?php if ($acl->isAllowed($user->role, 'users', 'add')): ?>
     <nav id="sub-nav">
-        <nav><a href="<?=$phireUri . '/users/add'; ?>">+ Add</a></nav>
+        <nav><a href="<?=$phireUri; ?>/users/add<?php if (null !== $roleId): ?><?='/' . $roleId; ?><?php endif; ?>">+ Add</a></nav>
     </nav>
 <?php endif; ?>
 <?php if ($acl->isAllowed($user->role, 'users', 'remove')): ?>
@@ -34,6 +34,7 @@
                 <th><a href="<?=$phireUri . '/users' . ((null !== $roleId) ? '/' . $roleId : null) . '?sort=username';?>">Username</a></th>
                 <th><a href="<?=$phireUri . '/users' . ((null !== $roleId) ? '/' . $roleId : null) . '?sort=email';?>">Email</a></th>
                 <th><a href="<?=$phireUri . '/users' . ((null !== $roleId) ? '/' . $roleId : null) . '?sort=role_name';?>">Role</a></th>
+                <th><a href="<?=$phireUri . '/users' . ((null !== $roleId) ? '/' . $roleId : null) . '?sort=active';?>">Active</a></th>
                 <th><a href="<?=$phireUri . '/users' . ((null !== $roleId) ? '/' . $roleId : null) . '?sort=verified';?>">Verified</a></th>
                 <th>Logins <span style="font-weight: normal;">[ Last Login ]</span></th>
                 <th class="text-center"><?php if ($acl->isAllowed($user->role, 'users', 'edit')): ?>Edit<?php else: ?>&nbsp;<?php endif; ?></th>
@@ -46,6 +47,7 @@
                 <td><?=$u->username; ?></td>
                 <td><?=$u->email; ?></td>
                 <td><?=(!empty($u->role_name) ? $u->role_name : '[Blocked]'); ?></td>
+                <td><?=(($u->active) ? 'Yes' : 'No'); ?></td>
                 <td><?=(($u->verified) ? 'Yes' : 'No'); ?></td>
                 <td><?php if ($acl->isAllowed($user->role, 'users-sessions', 'logins')): ?><a href="<?=$phireUri . '/users/logins/' . $u->id; ?>"><?=(count($u->logins)); ?></a><?php else: ?><?=(count($u->logins)); ?><?php endif; ?> &nbsp; <span style="font-size: 0.9em;">[ <?=(null !== $u->last_login) ? date('M j Y H:i:s', $u->last_login) : 'N/A'; ?> <?=(null !== $u->last_ip) ? $u->last_ip : null; ?> ]</span></td>
                 <td><?php if (($acl->isAllowed($user->role, 'users', 'edit') && ($acl->isAllowed($user->role, 'user-role-' . $u->role_id, 'edit')))): ?><a class="edit-link" href="<?=$phireUri . '/users/edit/' . $u->id; ?>">Edit</a><?php else: ?>&nbsp;<?php endif; ?></td>
@@ -60,7 +62,7 @@
 <?php else: ?>
 <?php if ($acl->isAllowed($user->role, 'users', 'add')): ?>
     <nav id="sub-nav">
-        <nav><a href="<?=$phireUri . '/users/add'; ?>">+ Add</a></nav>
+        <nav><a href="<?=$phireUri; ?>/users/add<?php if (null !== $roleId): ?><?='/' . $roleId; ?><?php endif; ?>">+ Add</a></nav>
     </nav>
 <?php endif; ?>
     <p>There are currently no users.</p>

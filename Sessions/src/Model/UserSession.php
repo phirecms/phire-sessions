@@ -104,8 +104,12 @@ class UserSession extends AbstractModel
         if (isset($post['user_id'])) {
             $session = Table\UserSessionData::findById((int)$post['user_id']);
             if (isset($session->user_id)) {
-                $session->logins = null;
-                $session->failed_attempts = (int)$post['failed_attempts'];
+                if (isset($post['clear_logins'])) {
+                    $session->logins = null;
+                }
+                if (isset($post['clear_failed_attempts'])) {
+                    $session->failed_attempts = 0;
+                }
                 $session->save();
             }
         }
