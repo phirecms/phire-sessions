@@ -160,7 +160,7 @@ class UserSession extends AbstractModel
      */
     public static function dashboard(\Phire\Controller\AbstractController $controller, \Phire\Application $application)
     {
-        if (($controller->request()->getRequestUri() == BASE_PATH . APP_URI) &&
+        if (($controller->request()->getRequestUri() == APP_URI) &&
             isset($application->module('Sessions')['multiple_session_warning']) &&
             ($application->module('Sessions')['multiple_session_warning'])) {
 
@@ -187,7 +187,7 @@ class UserSession extends AbstractModel
      */
     public static function users(\Phire\Controller\AbstractController $controller)
     {
-        if ($controller->request()->getRequestUri() == BASE_PATH . APP_URI . '/users') {
+        if ($controller->request()->getRequestUri() == APP_URI . '/users') {
             if (isset($controller->view()->users) && count($controller->view()->users > 0)) {
                 $controller->view()->setTemplate(__DIR__ . '/../../view/users/index.phtml');
                 foreach ($controller->view()->users as $user) {
@@ -234,7 +234,7 @@ class UserSession extends AbstractModel
 
         // If login, validate and start new session
         if (($controller->request()->isPost()) &&
-            ($controller->request()->getRequestUri() == BASE_PATH . APP_URI . '/login')) {
+            ($controller->request()->getRequestUri() == APP_URI . '/login')) {
             // If the user successfully logged in
             if (isset($sess->user)) {
                 $config = Table\UserSessionConfig::findById($sess->user->role_id);
@@ -391,7 +391,7 @@ class UserSession extends AbstractModel
      */
     public static function logout(\Phire\Application $application)
     {
-        if ($application->router()->getRouteMatch()->getRoute() == BASE_PATH . APP_URI . '/logout') {
+        if ($application->router()->getRouteMatch()->getRoute() == APP_URI . '/logout') {
             $path = BASE_PATH . APP_URI;
             if ($path == '') {
                 $path = '/';
