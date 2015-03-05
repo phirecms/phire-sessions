@@ -128,7 +128,7 @@
     height: 100%;
 }
 
-#session-form > dl:first-child > dd, #sessionr-form > dl:first-child > dt {
+#session-form > dl:first-child > dd, #session-form > dl:first-child > dt {
     width: 100%;
 }
 
