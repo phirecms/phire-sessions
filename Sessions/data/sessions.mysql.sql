@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]user_session_config` (
   `log_emails` text,
   `log_type` int(1),
   UNIQUE (`role_id`),
-  CONSTRAINT `fk_user_session_role_id` FOREIGN KEY (`role_id`) REFERENCES `[{prefix}]user_roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_user_session_role_id` FOREIGN KEY (`role_id`) REFERENCES `[{prefix}]roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
 
 -- --------------------------------------------------------

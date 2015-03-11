@@ -29,7 +29,7 @@ class SessionConfig extends Form
             $configsAry[] = $config->role_id;
         }
 
-        $roles = Table\UserRoles::findAll();
+        $roles = Table\Roles::findAll();
         $roleValues = ['----' => '----'];
         foreach ($roles->rows() as $role) {
             if (!in_array($role->id, $configsAry) || ($id == $role->id)) {

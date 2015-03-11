@@ -29,8 +29,8 @@ class SessionConfig extends AbstractModel
             'ip_allowed'          => DB_PREFIX . 'user_session_config.ip_allowed',
             'ip_blocked'          => DB_PREFIX . 'user_session_config.ip_blocked',
             'log_emails'          => DB_PREFIX . 'user_session_config.log_emails',
-            'role'                => DB_PREFIX . 'user_roles.name'
-        ])->join(DB_PREFIX . 'user_roles', [DB_PREFIX . 'user_roles.id' => DB_PREFIX . 'user_session_config.role_id']);
+            'role'                => DB_PREFIX . 'roles.name'
+        ])->join(DB_PREFIX . 'roles', [DB_PREFIX . 'roles.id' => DB_PREFIX . 'user_session_config.role_id']);
 
         if (null !== $limit) {
             $page = ((null !== $page) && ((int)$page > 1)) ?
@@ -70,7 +70,7 @@ class SessionConfig extends AbstractModel
             $this->data['log_emails']         = $session->log_emails;
             $this->data['log_type']           = $session->log_type;
 
-            $role = \Phire\Table\UserRoles::findById($session->role_id);
+            $role = \Phire\Table\Roles::findById($session->role_id);
             $this->data['role'] = $role->name;
         }
     }
@@ -173,6 +173,6 @@ class SessionConfig extends AbstractModel
      */
     public function rolesAvailable()
     {
-        return (Table\UserSessionConfig::findAll()->count() < \Phire\Table\UserRoles::findAll()->count());
+        return (Table\UserSessionConfig::findAll()->count() < \Phire\Table\Roles::findAll()->count());
     }
 }
