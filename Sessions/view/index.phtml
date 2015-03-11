@@ -29,7 +29,7 @@
                 <td><?=$session->role; ?></td>
                 <td class="text-center"><?=(($session->multiple_sessions) ? 'Yes' : 'No'); ?></td>
                 <td class="text-center"><?=(($session->allowed_attempts > 0) ? $session->allowed_attempts : 'N/A'); ?></td>
-                <td class="text-center"><?=(($session->session_expiration > 0) ? round($session->session_expiration / 60): 'N/A'); ?></td>
+                <td class="text-center"><?=(($session->session_expiration > 0) ? round($session->session_expiration / 60) . ' min' : 'N/A'); ?></td>
                 <td><?php if ($acl->isAllowed($user->role, 'sessions', 'edit')): ?><a class="edit-link" href="<?=$phireUri . '/sessions/edit/' . $session->role_id; ?>">Edit</a><?php else: ?>&nbsp;<?php endif; ?></td>
                 <td class="text-center"><?php if ($acl->isAllowed($user->role, 'sessions', 'remove')): ?><input type="checkbox" name="rm_sessions[]" id="rm_sessions<?=$i++; ?>" value="<?=$session->role_id; ?>" /><?php else: ?>&nbsp;<?php endif; ?></td>
             </tr>
