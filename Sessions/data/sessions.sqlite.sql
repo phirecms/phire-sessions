@@ -17,7 +17,6 @@ PRAGMA foreign_keys = ON;
 -- Table structure for table "user_session_config"
 --
 
-DROP TABLE IF EXISTS "[{prefix}]user_session_config";
 CREATE TABLE IF NOT EXISTS "[{prefix}]user_session_config" (
   "role_id" integer,
   "multiple_sessions" integer,
@@ -40,7 +39,6 @@ CREATE INDEX "sess_role_id" ON "[{prefix}]user_session_config" ("role_id");
 -- Table structure for table "user_session_data"
 --
 
-DROP TABLE IF EXISTS "[{prefix}]user_session_data";
 CREATE TABLE IF NOT EXISTS "[{prefix}]user_session_data" (
   "user_id" integer,
   "logins" text,
@@ -57,7 +55,6 @@ CREATE INDEX "sess_data_user_id" ON "[{prefix}]user_session_data" ("user_id");
 -- Table structure for table "user_sessions"
 --
 
-DROP TABLE IF EXISTS "[{prefix}]user_sessions";
 CREATE TABLE IF NOT EXISTS "[{prefix}]user_sessions" (
   "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
   "user_id" integer,

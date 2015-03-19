@@ -8,7 +8,6 @@
 -- Table structure for table "user_session_config"
 --
 
-DROP TABLE IF EXISTS "[{prefix}]user_session_config" CASCADE;
 CREATE TABLE IF NOT EXISTS "[{prefix}]user_session_config" (
   "role_id" integer,
   "multiple_sessions" integer,
@@ -29,7 +28,6 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_session_config" (
 -- Table structure for table "user_session_data"
 --
 
-DROP TABLE IF EXISTS "[{prefix}]user_session_data" CASCADE;
 CREATE TABLE IF NOT EXISTS "[{prefix}]user_session_data" (
   "user_id" integer,
   "logins" text,
@@ -46,7 +44,6 @@ CREATE TABLE IF NOT EXISTS "[{prefix}]user_session_data" (
 
 CREATE SEQUENCE user_session_id_seq START 4001;
 
-DROP TABLE IF EXISTS "[{prefix}]user_sessions" CASCADE;
 CREATE TABLE IF NOT EXISTS "[{prefix}]user_sessions" (
   "id" integer NOT NULL DEFAULT nextval('user_session_id_seq'),
   "user_id" integer,

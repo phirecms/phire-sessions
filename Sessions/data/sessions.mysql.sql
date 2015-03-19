@@ -8,7 +8,6 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- Table structure for table `user_session_config`
 --
 
-DROP TABLE IF EXISTS `[{prefix}]user_session_config`;
 CREATE TABLE IF NOT EXISTS `[{prefix}]user_session_config` (
   `role_id` int(16),
   `multiple_sessions` int(1),
@@ -29,7 +28,6 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]user_session_config` (
 -- Table structure for table `user_session_data`
 --
 
-DROP TABLE IF EXISTS `[{prefix}]user_session_data`;
 CREATE TABLE IF NOT EXISTS `[{prefix}]user_session_data` (
   `user_id` int(16),
   `logins` longtext,
@@ -44,7 +42,6 @@ CREATE TABLE IF NOT EXISTS `[{prefix}]user_session_data` (
 -- Table structure for table `user_sessions`
 --
 
-DROP TABLE IF EXISTS `[{prefix}]user_sessions`;
 CREATE TABLE IF NOT EXISTS `[{prefix}]user_sessions` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
   `user_id` int(16),
