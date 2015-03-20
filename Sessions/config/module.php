@@ -37,23 +37,23 @@ return [
         'events' => [
             [
                 'name'   => 'app.send',
-                'action' => 'Sessions\Model\UserSession::header'
+                'action' => 'Sessions\Event\UserSession::header'
             ],
             [
                 'name'   => 'app.send',
-                'action' => 'Sessions\Model\UserSession::login'
+                'action' => 'Sessions\Event\UserSession::login'
             ],
             [
                 'name'   => 'app.send',
-                'action' => 'Sessions\Model\UserSession::dashboard'
+                'action' => 'Sessions\Event\UserSession::dashboard'
             ],
             [
                 'name'   => 'app.send',
-                'action' => 'Sessions\Model\UserSession::users'
+                'action' => 'Sessions\Event\UserSession::users'
             ],
             [
                 'name'   => 'app.dispatch.pre',
-                'action' => 'Sessions\Model\UserSession::logout'
+                'action' => 'Sessions\Event\UserSession::logout'
             ]
         ],
         'uninstall' => function(){
