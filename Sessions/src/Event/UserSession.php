@@ -3,7 +3,7 @@
 namespace Sessions\Event;
 
 use Phire\Controller\AbstractController;
-use Phire\Application;
+use Pop\Application;
 use Pop\Http\Response;
 use Pop\Log;
 use Pop\Web\Cookie;
