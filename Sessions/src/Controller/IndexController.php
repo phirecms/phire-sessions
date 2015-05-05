@@ -29,7 +29,7 @@ class IndexController extends AbstractController
             $pages = null;
         }
 
-        $this->prepareView('index.phtml');
+        $this->prepareView('sessions/index.phtml');
         $this->view->title          = 'Modules : Sessions';
         $this->view->pages          = $pages;
         $this->view->sessions       = $session->getAll(
@@ -48,7 +48,7 @@ class IndexController extends AbstractController
     public function add()
     {
         if ((new Model\SessionConfig())->rolesAvailable()) {
-            $this->prepareView('add.phtml');
+            $this->prepareView('sessions/add.phtml');
             $this->view->title = 'Modules : Sessions : Add';
 
             $this->view->form = new Form\SessionConfig(null, $this->application->config()['forms']['Sessions\Form\SessionConfig']);
@@ -86,7 +86,7 @@ class IndexController extends AbstractController
         $session = new Model\SessionConfig();
         $session->getById($id);
 
-        $this->prepareView('edit.phtml');
+        $this->prepareView('sessions/edit.phtml');
         $this->view->title          = 'Modules : Sessions : Edit';
         $this->view->role           = $session->role;
         $this->view->rolesAvailable = $session->rolesAvailable();

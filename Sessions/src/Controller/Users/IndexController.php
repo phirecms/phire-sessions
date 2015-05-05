@@ -27,7 +27,7 @@ class IndexController extends AbstractController
             $pages = null;
         }
 
-        $this->prepareView('users/sessions.phtml');
+        $this->prepareView('phire/users/sessions.phtml');
         $this->view->title    = 'Users : Sessions';
         $this->view->pages    = $pages;
         $this->view->sessions = $session->getAll(
@@ -66,7 +66,7 @@ class IndexController extends AbstractController
                 $logins = $session->logins;
             }
 
-            $this->prepareView('users/logins.phtml');
+            $this->prepareView('phire/users/logins.phtml');
             $this->view->title           = 'Users : Logins';
             $this->view->pages           = $pages;
             $this->view->logins          = $logins;

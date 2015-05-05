@@ -13,21 +13,6 @@ class UserSession
 {
 
     /**
-     * Alter header view
-     *
-     * @param  AbstractController $controller
-     * @param  Application        $application
-     * @return void
-     */
-    public static function header(AbstractController $controller, Application $application)
-    {
-        $sess = $application->getService('session');
-        if (isset($sess->user) && ($controller->hasView())) {
-            $controller->view()->phireHeader = __DIR__ . '/../../view/header.phtml';
-        }
-    }
-
-    /**
      * Dashboard check to display multiple sessions warning
      *
      * @param  AbstractController $controller
@@ -65,7 +50,6 @@ class UserSession
     {
         if ($controller->application()->router()->getRouteMatch()->getRoute() == APP_URI . '/users') {
             if (isset($controller->view()->users) && count($controller->view()->users > 0)) {
-                $controller->view()->setTemplate(__DIR__ . '/../../view/users/index.phtml');
                 foreach ($controller->view()->users as $user) {
                     $userData = Table\UserSessionData::findById($user->id);
                     if (isset($userData->user_id)) {
