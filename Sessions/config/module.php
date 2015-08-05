@@ -37,6 +37,10 @@ return [
         'events' => [
             [
                 'name'   => 'app.send',
+                'action' => 'Sessions\Event\UserSession::header'
+            ],
+            [
+                'name'   => 'app.send',
                 'action' => 'Sessions\Event\UserSession::login'
             ],
             [
@@ -52,28 +56,7 @@ return [
                 'action' => 'Sessions\Event\UserSession::logout'
             ]
         ],
-        'install' => function(){
-            if (!file_exists($_SERVER['DOCUMENT_ROOT'] . MODULE_PATH . '/phire/view/phire')) {
-                mkdir($_SERVER['DOCUMENT_ROOT'] . MODULE_PATH . '/phire/view/phire');
-                chmod($_SERVER['DOCUMENT_ROOT'] . MODULE_PATH . '/phire/view/phire', 0777);
-            }
-            if (!file_exists($_SERVER['DOCUMENT_ROOT'] . MODULE_PATH . '/phire/view/phire/users')) {
-                mkdir($_SERVER['DOCUMENT_ROOT'] . MODULE_PATH . '/phire/view/phire/users');
-                chmod($_SERVER['DOCUMENT_ROOT'] . MODULE_PATH . '/phire/view/phire/users', 0777);
-            }
-            copy(__DIR__ . '/../view/phire/header.phtml', $_SERVER['DOCUMENT_ROOT'] . MODULE_PATH . '/phire/view/phire/header.phtml');
-            copy(__DIR__ . '/../view/phire/users/index.phtml', $_SERVER['DOCUMENT_ROOT'] . MODULE_PATH . '/phire/view/phire/users/index.phtml');
-            chmod($_SERVER['DOCUMENT_ROOT'] . MODULE_PATH . '/phire/view/phire/header.phtml', 0777);
-            chmod($_SERVER['DOCUMENT_ROOT'] . MODULE_PATH . '/phire/view/phire/users/index.phtml', 0777);
-        },
         'uninstall' => function(){
-            if (file_exists($_SERVER['DOCUMENT_ROOT'] . MODULE_PATH . '/phire/view/phire/header.phtml')) {
-                unlink($_SERVER['DOCUMENT_ROOT'] . MODULE_PATH . '/phire/view/phire/header.phtml');
-            }
-            if (file_exists($_SERVER['DOCUMENT_ROOT'] . MODULE_PATH . '/phire/view/phire/users/index.phtml')) {
-                unlink($_SERVER['DOCUMENT_ROOT'] . MODULE_PATH . '/phire/view/phire/users/index.phtml');
-            }
-
             $path = BASE_PATH . APP_URI;
             if ($path == '') {
                 $path = '/';

@@ -13,6 +13,19 @@ class UserSession
 {
 
     /**
+     * Set header
+     *
+     * @param  AbstractController $controller
+     * @return void
+     */
+    public static function header(AbstractController $controller)
+    {
+        if (($controller->hasView()) && (null !== $controller->view()->phireHeader)) {
+            $controller->view()->phireHeader = __DIR__ . '/../../view/phire/header.phtml';
+        }
+    }
+
+    /**
      * Dashboard check to display multiple sessions warning
      *
      * @param  AbstractController $controller
@@ -48,7 +61,8 @@ class UserSession
      */
     public static function users(AbstractController $controller)
     {
-        if ($controller->application()->router()->getRouteMatch()->getRoute() == APP_URI . '/users') {
+        if (($controller->application()->router()->getRouteMatch()->getRoute() == APP_URI . '/users') && ($controller->hasView())) {
+            $controller->view()->setTemplate(__DIR__ . '/../../view/phire/users/index.phtml');
             if (isset($controller->view()->users) && count($controller->view()->users > 0)) {
                 foreach ($controller->view()->users as $user) {
                     $userData = Table\UserSessionData::findById($user->id);
@@ -246,7 +260,7 @@ class UserSession
     /**
      * Record logout/session end
      *
-     * @param  \Phire\Application $application
+     * @param  \Pop\Application $application
      * @return void
      */
     public static function logout(Application $application)
@@ -340,9 +354,6 @@ class UserSession
                 'Someone attempted to log in as \'' . $user->username . '\' from ' . $_SERVER['REMOTE_ADDR'];
 
             $emails = explode(',', $config->log_emails);
-            if (in_array($user->email, $emails)) {
-                unset($emails[array_search($user->email, $emails)]);
-            }
             if (count($emails) > 0) {
                 $logger = new Log\Logger(new Log\Writer\Mail($emails, $options));
                 $logger->alert($message);

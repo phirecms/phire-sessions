@@ -2,6 +2,8 @@
  * Sessions Module Scripts for Phire CMS 2
  */
 
+phire.sessionToInt = null;
+
 phire.sessionWarning = function(path, domain) {
     if (jax.cookie.load('phire_session_warning_dismiss') != 1) {
         jax('body').append('div', {"id": "session-warning"});
@@ -18,6 +20,14 @@ phire.sessionWarning = function(path, domain) {
             return false;
         });
     }
+};
+
+phire.sessionContinue = function(href) {
+    jax.get(href);
+    phire.clearStatus('#session-timeout', function(){
+        jax('#session-timeout').remove();
+        clearInterval(phire.sessionToInt);
+    });
 };
 
 jax(document).ready(function(){
@@ -58,17 +68,18 @@ jax(document).ready(function(){
     var timeout = jax.cookie.load('phire_session_timeout');
     var path    = decodeURIComponent(jax.cookie.load('phire_session_path'));
     if (timeout != '') {
-        setInterval(function(){
+        phire.sessionToInt = setInterval(function(){
             if (jax('#session-timeout')[0] == undefined) {
                 jax('body').append('div', {"id": "session-timeout"});
                 jax('#session-timeout').css('opacity', 0);
                 jax('#session-timeout').val(
                     '<h4 id="countdown">30</h4>Your session is about to expire.<br /><span><a href="' + path +
-                    '/sessions/json" onclick="jax.get(this.href); phire.clearStatus(\'#session-timeout\'); return false;">Continue</a>?</span>'
+                    '/sessions/json" onclick="phire.sessionContinue(this.href); return false;">Continue</a>? [No, <a href="' + path +
+                    '/logout">Logout</a>]</span>'
                 );
                 jax('#session-timeout').fade(100, {tween: 10, speed: 200});
 
-                setInterval(function(){
+                phire.sessionToInt = setInterval(function(){
                     var sec = parseInt(jax('#countdown').val());
                     if (sec > 0) {
                         var newSec = sec - 1;
