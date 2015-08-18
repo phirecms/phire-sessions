@@ -3,7 +3,7 @@
 return [
     APP_URI => [
         '/sessions[/]' => [
-            'controller' => 'Sessions\Controller\IndexController',
+            'controller' => 'Phire\Sessions\Controller\IndexController',
             'action'     => 'index',
             'acl'        => [
                 'resource'   => 'sessions',
@@ -11,7 +11,7 @@ return [
             ]
         ],
         '/sessions/add' => [
-            'controller' => 'Sessions\Controller\IndexController',
+            'controller' => 'Phire\Sessions\Controller\IndexController',
             'action'     => 'add',
             'acl'        => [
                 'resource'   => 'sessions',
@@ -19,7 +19,7 @@ return [
             ]
         ],
         '/sessions/edit/:id' => [
-            'controller' => 'Sessions\Controller\IndexController',
+            'controller' => 'Phire\Sessions\Controller\IndexController',
             'action'     => 'edit',
             'acl'        => [
                 'resource'   => 'sessions',
@@ -27,7 +27,7 @@ return [
             ]
         ],
         '/sessions/remove' => [
-            'controller' => 'Sessions\Controller\IndexController',
+            'controller' => 'Phire\Sessions\Controller\IndexController',
             'action'     => 'remove',
             'acl'        => [
                 'resource'   => 'sessions',
@@ -35,7 +35,7 @@ return [
             ]
         ],
         '/sessions/json' => [
-            'controller' => 'Sessions\Controller\IndexController',
+            'controller' => 'Phire\Sessions\Controller\IndexController',
             'action'     => 'json',
             'acl'        => [
                 'resource'   => 'sessions',
@@ -43,7 +43,7 @@ return [
             ]
         ],
         '/users/sessions[/]' => [
-            'controller' => 'Sessions\Controller\Users\IndexController',
+            'controller' => 'Phire\Sessions\Controller\Users\IndexController',
             'action'     => 'sessions',
             'acl'        => [
                 'resource'   => 'users-sessions',
@@ -51,7 +51,7 @@ return [
             ]
         ],
         '/users/logins/:id' => [
-            'controller' => 'Sessions\Controller\Users\IndexController',
+            'controller' => 'Phire\Sessions\Controller\Users\IndexController',
             'action'     => 'logins',
             'acl'        => [
                 'resource'   => 'users-sessions',
@@ -59,7 +59,7 @@ return [
             ]
         ],
         '/users/sessions/remove' => [
-            'controller' => 'Sessions\Controller\Users\IndexController',
+            'controller' => 'Phire\Sessions\Controller\Users\IndexController',
             'action'     => 'remove',
             'acl'        => [
                 'resource'   => 'users-sessions',

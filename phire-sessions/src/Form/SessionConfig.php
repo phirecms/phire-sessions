@@ -1,6 +1,6 @@
 <?php
 
-namespace Sessions\Form;
+namespace Phire\Sessions\Form;
 
 use Phire\Table;
 use Pop\Form\Form;
@@ -22,7 +22,7 @@ class SessionConfig extends Form
      */
     public function __construct($id = null, array $fields, $action = null, $method = 'post')
     {
-        $configs = \Sessions\Table\UserSessionConfig::findAll();
+        $configs = \Phire\Sessions\Table\UserSessionConfig::findAll();
         $configsAry = [];
 
         foreach ($configs->rows() as $config) {

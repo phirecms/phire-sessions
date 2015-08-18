@@ -6,8 +6,8 @@
  * Version: 1.0
  */
 return [
-    'Sessions' => [
-        'prefix'     => 'Sessions\\',
+    'phire-sessions' => [
+        'prefix'     => 'Phire\Sessions\\',
         'src'        => __DIR__ . '/../src',
         'routes'     => include 'routes.php',
         'resources'  => include 'resources.php',
@@ -37,23 +37,23 @@ return [
         'events' => [
             [
                 'name'   => 'app.send',
-                'action' => 'Sessions\Event\UserSession::header'
+                'action' => 'Phire\Sessions\Event\UserSession::header'
             ],
             [
                 'name'   => 'app.send',
-                'action' => 'Sessions\Event\UserSession::login'
+                'action' => 'Phire\Sessions\Event\UserSession::login'
             ],
             [
                 'name'   => 'app.send',
-                'action' => 'Sessions\Event\UserSession::dashboard'
+                'action' => 'Phire\Sessions\Event\UserSession::dashboard'
             ],
             [
                 'name'   => 'app.send',
-                'action' => 'Sessions\Event\UserSession::users'
+                'action' => 'Phire\Sessions\Event\UserSession::users'
             ],
             [
                 'name'   => 'app.dispatch.pre',
-                'action' => 'Sessions\Event\UserSession::logout'
+                'action' => 'Phire\Sessions\Event\UserSession::logout'
             ]
         ],
         'uninstall' => function(){

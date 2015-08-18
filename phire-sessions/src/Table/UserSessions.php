@@ -1,6 +1,6 @@
 <?php
 
-namespace Sessions\Table;
+namespace Phire\Sessions\Table;
 
 use Pop\Db\Record;
 

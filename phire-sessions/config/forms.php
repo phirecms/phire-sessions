@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'Sessions\Form\SessionConfig' => [
+    'Phire\Sessions\Form\SessionConfig' => [
         [
             'submit' => [
                 'type'       => 'submit',

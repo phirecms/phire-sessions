@@ -1,9 +1,9 @@
 <?php
 
-namespace Sessions\Model;
+namespace Phire\Sessions\Model;
 
 use Phire\Model\AbstractModel;
-use Sessions\Table;
+use Phire\Sessions\Table;
 
 class UserSession extends AbstractModel
 {

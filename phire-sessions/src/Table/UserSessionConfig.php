@@ -1,10 +1,10 @@
 <?php
 
-namespace Sessions\Table;
+namespace Phire\Sessions\Table;
 
 use Pop\Db\Record;
 
-class UserSessionData extends Record
+class UserSessionConfig extends Record
 {
 
     /**
@@ -17,6 +17,6 @@ class UserSessionData extends Record
      * Primary keys
      * @var array
      */
-    protected $primaryKeys = ['user_id'];
+    protected $primaryKeys = ['role_id'];
 
 }

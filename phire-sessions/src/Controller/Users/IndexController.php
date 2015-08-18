@@ -1,8 +1,8 @@
 <?php
 
-namespace Sessions\Controller\Users;
+namespace Phire\Sessions\Controller\Users;
 
-use Sessions\Model;
+use Phire\Sessions\Model;
 use Phire\Controller\AbstractController;
 use Pop\Paginator\Paginator;
 

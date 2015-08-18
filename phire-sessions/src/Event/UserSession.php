@@ -1,13 +1,13 @@
 <?php
 
-namespace Sessions\Event;
+namespace Phire\Sessions\Event;
 
 use Phire\Controller\AbstractController;
 use Pop\Application;
 use Pop\Http\Response;
 use Pop\Log;
 use Pop\Web\Cookie;
-use Sessions\Table;
+use Phire\Sessions\Table;
 
 class UserSession
 {
@@ -35,8 +35,8 @@ class UserSession
     public static function dashboard(AbstractController $controller, Application $application)
     {
         if (($controller->request()->getRequestUri() == APP_URI) &&
-            isset($application->module('Sessions')['multiple_session_warning']) &&
-            ($application->module('Sessions')['multiple_session_warning'])) {
+            isset($application->module('phire-sessions')['multiple_session_warning']) &&
+            ($application->module('phire-sessions')['multiple_session_warning'])) {
 
             $sess = $application->getService('session');
             if (isset($sess->user) && isset($sess->user->session)) {
@@ -134,7 +134,7 @@ class UserSession
                         exit();
                     } else {
                         if (isset($data->user_id)) {
-                            $limit  = (int)$application->module('Sessions')['login_limit'];
+                            $limit  = (int)$application->module('phire-sessions')['login_limit'];
                             $logins = unserialize($data->logins);
                             if (($limit > 0) && (count($logins) >= $limit)) {
                                 reset($logins);
@@ -184,7 +184,7 @@ class UserSession
                 }
 
                 // Clear old sessions
-                $clear  = (int)$application->module('Sessions')['clear_sessions'];
+                $clear  = (int)$application->module('phire-sessions')['clear_sessions'];
                 if ($clear > 0) {
                     $clear = time() - $clear;
                     $sql   = Table\UserSessions::sql();

@@ -1,10 +1,10 @@
 <?php
 
-namespace Sessions\Controller;
+namespace Phire\Sessions\Controller;
 
-use Sessions\Model;
-use Sessions\Form;
-use Sessions\Table;
+use Phire\Sessions\Model;
+use Phire\Sessions\Form;
+use Phire\Sessions\Table;
 use Phire\Controller\AbstractController;
 use Pop\Paginator\Paginator;
 
@@ -51,7 +51,7 @@ class IndexController extends AbstractController
             $this->prepareView('sessions/add.phtml');
             $this->view->title = 'Modules : Sessions : Add';
 
-            $this->view->form = new Form\SessionConfig(null, $this->application->config()['forms']['Sessions\Form\SessionConfig']);
+            $this->view->form = new Form\SessionConfig(null, $this->application->config()['forms']['Phire\Sessions\Form\SessionConfig']);
 
             if ($this->request->isPost()) {
                 $this->view->form->addFilter('strip_tags')
@@ -91,7 +91,7 @@ class IndexController extends AbstractController
         $this->view->role           = $session->role;
         $this->view->rolesAvailable = $session->rolesAvailable();
 
-        $this->view->form = new Form\SessionConfig($id, $this->application->config()['forms']['Sessions\Form\SessionConfig']);
+        $this->view->form = new Form\SessionConfig($id, $this->application->config()['forms']['Phire\Sessions\Form\SessionConfig']);
         $this->view->form->addFilter('htmlentities', [ENT_QUOTES, 'UTF-8'])
              ->setFieldValues($session->toArray());
 

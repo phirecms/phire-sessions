@@ -1,10 +1,10 @@
 <?php
 
-namespace Sessions\Model;
+namespace Phire\Sessions\Model;
 
 use Phire\Model\AbstractModel;
 use Pop\Http\Response;
-use Sessions\Table;
+use Phire\Sessions\Table;
 
 class SessionConfig extends AbstractModel
 {
