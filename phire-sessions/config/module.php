@@ -1,6 +1,6 @@
 <?php
 /**
- * Module Name: Sessions
+ * Module Name: phire-sessions
  * Author: Nick Sagona
  * Description: This is the sessions module for Phire CMS 2
  * Version: 1.0
