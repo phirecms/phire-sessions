@@ -36,19 +36,19 @@ return [
         ],
         'events' => [
             [
-                'name'   => 'app.send',
+                'name'   => 'app.send.pre',
                 'action' => 'Phire\Sessions\Event\UserSession::header'
             ],
             [
-                'name'   => 'app.send',
+                'name'   => 'app.send.pre',
                 'action' => 'Phire\Sessions\Event\UserSession::login'
             ],
             [
-                'name'   => 'app.send',
+                'name'   => 'app.send.pre',
                 'action' => 'Phire\Sessions\Event\UserSession::dashboard'
             ],
             [
-                'name'   => 'app.send',
+                'name'   => 'app.send.pre',
                 'action' => 'Phire\Sessions\Event\UserSession::users'
             ],
             [
