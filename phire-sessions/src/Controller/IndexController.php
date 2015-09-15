@@ -65,7 +65,7 @@ class IndexController extends AbstractController
                     $session = new Model\SessionConfig();
                     $session->save($this->view->form->getFields());
                     $this->view->id = $session->role_id;
-                    $this->sess->setRequestValue('saved', true, 1);
+                    $this->sess->setRequestValue('saved', true);
                     $this->redirect(BASE_PATH . APP_URI . '/sessions/edit/' . $session->role_id);
                 }
             }
@@ -107,7 +107,7 @@ class IndexController extends AbstractController
                 $session = new Model\SessionConfig();
                 $session->update($this->view->form->getFields());
                 $this->view->id = $session->role_id;
-                $this->sess->setRequestValue('saved', true, 1);
+                $this->sess->setRequestValue('saved', true);
                 $this->redirect(BASE_PATH . APP_URI . '/sessions/edit/' . $session->role_id);
             }
         }
@@ -126,7 +126,7 @@ class IndexController extends AbstractController
             $session = new Model\SessionConfig();
             $session->remove($this->request->getPost());
         }
-        $this->sess->setRequestValue('removed', true, 1);
+        $this->sess->setRequestValue('removed', true);
         $this->redirect(BASE_PATH . APP_URI . '/sessions');
     }
 

@@ -47,7 +47,7 @@ class IndexController extends AbstractController
         $session = new Model\UserSession();
         if ($this->request->isPost()) {
             $session->clear($this->request->getPost());
-            $this->sess->setRequestValue('removed', true, 1);
+            $this->sess->setRequestValue('removed', true);
             $this->redirect(BASE_PATH . APP_URI . '/users/logins/' . $id);
         } else {
             $session = new Model\UserSession();
@@ -90,7 +90,7 @@ class IndexController extends AbstractController
             $session = new Model\UserSession();
             $session->remove($this->request->getPost());
         }
-        $this->sess->setRequestValue('removed', true, 1);
+        $this->sess->setRequestValue('removed', true);
         $this->redirect(BASE_PATH . APP_URI . '/users/sessions');
     }
 
