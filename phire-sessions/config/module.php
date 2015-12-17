@@ -27,7 +27,7 @@ return [
             ]
         ],
         'nav.module' => [
-            'name' => 'Sessions',
+            'name' => 'Sessions Config',
             'href' => '/sessions',
             'acl'  => [
                 'resource'   => 'sessions',
@@ -35,10 +35,6 @@ return [
             ]
         ],
         'events' => [
-            [
-                'name'   => 'app.send.pre',
-                'action' => 'Phire\Sessions\Event\UserSession::header'
-            ],
             [
                 'name'   => 'app.send.pre',
                 'action' => 'Phire\Sessions\Event\UserSession::login'
@@ -70,6 +66,8 @@ return [
                 unset($sess->user->session);
             }
         },
+        'header'                   => __DIR__ . '/../view/phire/header.phtml',
+        'footer'                   => __DIR__ . '/../view/phire/footer.phtml',
         'clear_sessions'           => 86400,
         'multiple_session_warning' => false,
         'login_limit'              => 500

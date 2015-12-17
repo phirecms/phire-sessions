@@ -13,19 +13,6 @@ class UserSession
 {
 
     /**
-     * Set header
-     *
-     * @param  AbstractController $controller
-     * @return void
-     */
-    public static function header(AbstractController $controller)
-    {
-        if (($controller->hasView()) && (null !== $controller->view()->phireHeader)) {
-            $controller->view()->phireHeader = __DIR__ . '/../../view/phire/header.phtml';
-        }
-    }
-
-    /**
      * Dashboard check to display multiple sessions warning
      *
      * @param  AbstractController $controller

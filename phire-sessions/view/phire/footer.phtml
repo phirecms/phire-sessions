@@ -1,0 +1,4 @@
+<div id="last-session">
+    <strong>Last Login</strong><br />
+    <?=(!empty($user->session->last_login) ? date('M j Y g:i A', $user->session->last_login) : '(N/A)'); ?><?=(!empty($user->session->last_ip) ? ' (' . $user->session->last_ip . ')' : null) . PHP_EOL; ?>
+</div>
