@@ -17,6 +17,16 @@ return [
                 'value'      => null,
                 'validators' => new \Pop\Validator\NotEqual('----', 'Please select a role.')
             ],
+            'log_type' => [
+                'type'       => 'select',
+                'label'      => 'Log Type',
+                'value'      => [
+                    '--' => '----',
+                    '1'  => 'Failure',
+                    '2'  => 'Success',
+                    '3'  => 'Both'
+                ]
+            ],
             'multiple_sessions' => [
                 'type'      => 'radio',
                 'label'     => 'Multiple Sessions',
@@ -75,16 +85,6 @@ return [
                 'attributes' => [
                     'rows' => 3,
                     'cols' => 60
-                ]
-            ],
-            'log_type' => [
-                'type'       => 'select',
-                'label'      => 'Log Type',
-                'value'      => [
-                    '--' => '----',
-                    '1'  => 'Failure',
-                    '2'  => 'Success',
-                    '3'  => 'Both'
                 ]
             ]
         ]
