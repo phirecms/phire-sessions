@@ -13,14 +13,23 @@ return [
         'resources'  => include 'resources.php',
         'forms'      => include 'forms.php',
         'nav.phire'  => [
-            'users' => [
+            'sessions' => [
+                'name' => 'Sessions',
+                'href' => '/sessions',
+                'acl'  => [
+                    'resource'   => 'sessions',
+                    'permission' => 'index'
+                ],
+                'attributes' => [
+                    'class' => 'sessions-nav-icon'
+                ],
                 'children' => [
-                    'sessions' => [
-                        'name' => 'Sessions',
-                        'href' => '/users/sessions',
+                    'logins' => [
+                        'name' => 'Logins',
+                        'href' => 'logins',
                         'acl'  => [
-                            'resource'   => 'users-sessions',
-                            'permission' => 'index'
+                            'resource'   => 'sessions',
+                            'permission' => 'logins'
                         ]
                     ]
                 ]
@@ -28,9 +37,9 @@ return [
         ],
         'nav.module' => [
             'name' => 'Sessions Config',
-            'href' => '/sessions',
+            'href' => '/sessions/config',
             'acl'  => [
-                'resource'   => 'sessions',
+                'resource'   => 'sessions-config',
                 'permission' => 'index'
             ]
         ],
@@ -42,10 +51,6 @@ return [
             [
                 'name'   => 'app.send.pre',
                 'action' => 'Phire\Sessions\Event\UserSession::dashboard'
-            ],
-            [
-                'name'   => 'app.send.pre',
-                'action' => 'Phire\Sessions\Event\UserSession::users'
             ],
             [
                 'name'   => 'app.dispatch.pre',

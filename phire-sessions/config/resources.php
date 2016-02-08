@@ -3,13 +3,13 @@
 return [
     'sessions' => [
         'index',
-        'add',
-        'edit',
+        'logins',
         'remove'
     ],
-    'users-sessions' => [
+    'sessions-config' => [
         'index',
-        'logins',
+        'add',
+        'edit',
         'remove'
     ]
 ];

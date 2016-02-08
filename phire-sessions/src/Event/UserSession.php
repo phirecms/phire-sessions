@@ -41,40 +41,6 @@ class UserSession
     }
 
     /**
-     * Alter user list view
-     *
-     * @param  AbstractController $controller
-     * @return void
-     */
-    public static function users(AbstractController $controller)
-    {
-        if (($controller->application()->router()->getRouteMatch()->getRoute() == APP_URI . '/users') && ($controller->hasView())) {
-            $controller->view()->setTemplate(__DIR__ . '/../../view/phire/users/index.phtml');
-            if (isset($controller->view()->users) && count($controller->view()->users > 0)) {
-                foreach ($controller->view()->users as $user) {
-                    $userData = Table\UserSessionData::findById($user->id);
-                    if (isset($userData->user_id)) {
-                        $user->logins = (null !== $userData->logins) ? unserialize($userData->logins) : [];
-                        if (count($user->logins) > 0) {
-                            end($user->logins);
-                            $user->last_login = key($user->logins);
-                            $user->last_ip    = $user->logins[$user->last_login]['ip'];
-                            reset($user->logins);
-                        } else {
-                            $user->last_login = null;
-                            $user->last_ip    = null;
-                        }
-                    } else {
-                        $user->logins     = [];
-                        $user->last_login = null;
-                        $user->last_ip    = null;
-                    }
-                }
-            }
-        }
-    }
-
-    /**
      * Login and track session
      *
      * @param  AbstractController $controller

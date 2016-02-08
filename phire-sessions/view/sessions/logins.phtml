@@ -1,0 +1,41 @@
+<?php include $phireHeader; ?>
+    <h1 class="sessions-header"><?=$title; ?></h1>
+<?php if (count($users) > 0): ?>
+<?php if (null !== $pages): ?>
+    <div class="page-links"><?=$pages; ?></div>
+<?php endif; ?>
+    <nav id="sub-nav">
+        <nav><a href="<?=$phireUri . '/sessions'; ?>">Back</a></nav>
+    </nav>
+    <table class="data-table" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+            <th>#</th>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Logins</th>
+            <th>Last Login</th>
+            <th class="text-center">Edit</th>
+        </tr>
+<?php $i = 1; ?>
+<?php foreach ($users as $user): ?>
+        <tr>
+            <td><?=$user->id; ?></td>
+            <td><?=$user->username; ?></td>
+            <td><?=$user->role_name; ?></td>
+            <td><?=count($user->logins); ?></td>
+            <td><?php if (count($user->logins) > 0):
+$keys = array_keys($user->logins);
+$ts   = $keys[0];
+echo date('M j Y H:i:s', $ts) . ' &nbsp; [ ' . $user->logins[$ts]['ip'] . ' ]';
+else: ?>N/A<?php endif; ?></td>
+            <td class="text-center"><?php if ($acl->isAllowed($user->role_name, 'sessions', 'logins')): ?><a class="edit-link" href="<?=$phireUri . '/sessions/logins/' . $user->id; ?>">Edit</a><?php else: ?>&nbsp;<?php endif; ?></td>
+        </tr>
+<?php endforeach; ?>
+    </table>
+<?php else: ?>
+    <nav id="sub-nav">
+        <nav><a href="<?=$phireUri . '/sessions'; ?>">Back</a></nav>
+    </nav>
+    <p>There are currently no user logins.</p>
+<?php endif; ?>
+<?php include $phireFooter; ?>

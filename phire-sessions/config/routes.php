@@ -2,28 +2,60 @@
 
 return [
     APP_URI => [
+        '/sessions/config[/]' => [
+            'controller' => 'Phire\Sessions\Controller\ConfigController',
+            'action'     => 'index',
+            'acl'        => [
+                'resource'   => 'sessions-config',
+                'permission' => 'index'
+            ]
+        ],
+        '/sessions/config/add' => [
+            'controller' => 'Phire\Sessions\Controller\ConfigController',
+            'action'     => 'add',
+            'acl'        => [
+                'resource'   => 'sessions-config',
+                'permission' => 'add'
+            ]
+        ],
+        '/sessions/config/edit/:id' => [
+            'controller' => 'Phire\Sessions\Controller\ConfigController',
+            'action'     => 'edit',
+            'acl'        => [
+                'resource'   => 'sessions-config',
+                'permission' => 'edit'
+            ]
+        ],
+        '/sessions/config/remove' => [
+            'controller' => 'Phire\Sessions\Controller\ConfigController',
+            'action'     => 'remove',
+            'acl'        => [
+                'resource'   => 'sessions-config',
+                'permission' => 'remove'
+            ]
+        ],
+        '/sessions/config/json' => [
+            'controller' => 'Phire\Sessions\Controller\ConfigController',
+            'action'     => 'json',
+            'acl'        => [
+                'resource'   => 'sessions-config',
+                'permission' => 'json'
+            ]
+        ],
         '/sessions[/]' => [
             'controller' => 'Phire\Sessions\Controller\IndexController',
-            'action'     => 'index',
+            'action'     => 'sessions',
             'acl'        => [
                 'resource'   => 'sessions',
                 'permission' => 'index'
             ]
         ],
-        '/sessions/add' => [
+        '/sessions/logins[/:id]' => [
             'controller' => 'Phire\Sessions\Controller\IndexController',
-            'action'     => 'add',
+            'action'     => 'logins',
             'acl'        => [
                 'resource'   => 'sessions',
-                'permission' => 'add'
-            ]
-        ],
-        '/sessions/edit/:id' => [
-            'controller' => 'Phire\Sessions\Controller\IndexController',
-            'action'     => 'edit',
-            'acl'        => [
-                'resource'   => 'sessions',
-                'permission' => 'edit'
+                'permission' => 'logins'
             ]
         ],
         '/sessions/remove' => [
@@ -31,38 +63,6 @@ return [
             'action'     => 'remove',
             'acl'        => [
                 'resource'   => 'sessions',
-                'permission' => 'remove'
-            ]
-        ],
-        '/sessions/json' => [
-            'controller' => 'Phire\Sessions\Controller\IndexController',
-            'action'     => 'json',
-            'acl'        => [
-                'resource'   => 'sessions',
-                'permission' => 'json'
-            ]
-        ],
-        '/users/sessions[/]' => [
-            'controller' => 'Phire\Sessions\Controller\Users\IndexController',
-            'action'     => 'sessions',
-            'acl'        => [
-                'resource'   => 'users-sessions',
-                'permission' => 'sessions'
-            ]
-        ],
-        '/users/logins/:id' => [
-            'controller' => 'Phire\Sessions\Controller\Users\IndexController',
-            'action'     => 'logins',
-            'acl'        => [
-                'resource'   => 'users-sessions',
-                'permission' => 'logins'
-            ]
-        ],
-        '/users/sessions/remove' => [
-            'controller' => 'Phire\Sessions\Controller\Users\IndexController',
-            'action'     => 'remove',
-            'acl'        => [
-                'resource'   => 'users-sessions',
                 'permission' => 'remove'
             ]
         ]

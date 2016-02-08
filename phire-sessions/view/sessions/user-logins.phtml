@@ -5,7 +5,7 @@
     <div class="page-links"><?=$pages; ?></div>
 <?php endif; ?>
     <nav id="sub-nav">
-        <nav><a href="<?=$phireUri . '/users'; ?>">Back</a></nav>
+        <nav><a href="<?=$phireUri . '/sessions/logins'; ?>">Back</a></nav>
     </nav>
     <table class="data-table" cellpadding="0" cellspacing="0" border="0">
         <tr>
@@ -24,7 +24,7 @@
     </table>
 <?php else: ?>
     <nav id="sub-nav">
-        <nav><a href="<?=$phireUri . '/users'; ?>">Back</a></nav>
+        <nav><a href="<?=$phireUri . '/sessions/logins'; ?>">Back</a></nav>
     </nav>
     <table class="data-table" cellpadding="0" cellspacing="0" border="0">
         <tr>
@@ -34,13 +34,13 @@
         </tr>
         <tr>
             <td colspan="3">
-                <p>There are currently no logins.</p>
+                <p>There are currently no logins for this user.</p>
             </td>
         </tr>
     </table>
 <?php endif; ?>
-<?php if ($acl->isAllowed($user->role, 'users-sessions', 'remove')): ?>
-    <form id="users-logins-form" action="<?=$phireUri . '/users/logins/' . $user_id; ?>" method="post">
+<?php if ($acl->isAllowed($user->role, 'sessions', 'logins')): ?>
+    <form id="users-logins-form" action="<?=$phireUri . '/sessions/logins/' . $user_id; ?>" method="post">
         <div id="form-footer" style="float: right;">
             <input type="submit" name="submit" class="process-btn" value="Clear" />
             <span style="display: inline-block; margin: 4px 15px 0 0; padding: 0 15px 0 0; border-right: solid 1px #aaa;">Clear Logins? (<?=$total_logins; ?>) <input style="float: right; margin: 4px 0 0 4px;" type="checkbox" name="clear_logins" value="1" /></span>

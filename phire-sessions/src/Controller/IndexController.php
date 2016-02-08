@@ -3,8 +3,6 @@
 namespace Phire\Sessions\Controller;
 
 use Phire\Sessions\Model;
-use Phire\Sessions\Form;
-use Phire\Sessions\Table;
 use Phire\Controller\AbstractController;
 use Pop\Paginator\Paginator;
 
@@ -12,13 +10,13 @@ class IndexController extends AbstractController
 {
 
     /**
-     * Index action method
+     * Sessions action method
      *
      * @return void
      */
-    public function index()
+    public function sessions()
     {
-        $session = new Model\SessionConfig();
+        $session = new Model\UserSession();
 
         if ($session->hasPages($this->config->pagination)) {
             $limit = $this->config->pagination;
@@ -29,90 +27,87 @@ class IndexController extends AbstractController
             $pages = null;
         }
 
-        $this->prepareView('sessions/index.phtml');
-        $this->view->title          = 'Modules : Sessions';
-        $this->view->pages          = $pages;
-        $this->view->sessions       = $session->getAll(
+        $this->prepareView('index.phtml');
+        $this->view->title    = 'Sessions';
+        $this->view->pages    = $pages;
+        $this->view->sessions = $session->getAll(
             $limit, $this->request->getQuery('page'), $this->request->getQuery('sort')
         );
-        $this->view->rolesAvailable = $session->rolesAvailable();
-
         $this->send();
     }
 
     /**
-     * Add action method
-     *
-     * @return void
-     */
-    public function add()
-    {
-        if ((new Model\SessionConfig())->rolesAvailable()) {
-            $this->prepareView('sessions/add.phtml');
-            $this->view->title = 'Modules : Sessions : Add';
-
-            $this->view->form = new Form\SessionConfig(null, $this->application->config()['forms']['Phire\Sessions\Form\SessionConfig']);
-
-            if ($this->request->isPost()) {
-                $this->view->form->addFilter('strip_tags')
-                    ->addFilter('htmlentities', [ENT_QUOTES, 'UTF-8'])
-                    ->setFieldValues($this->request->getPost());
-
-                if ($this->view->form->isValid()) {
-                    $this->view->form->clearFilters()
-                        ->addFilter('html_entity_decode', [ENT_QUOTES, 'UTF-8'])
-                        ->filter();
-                    $session = new Model\SessionConfig();
-                    $session->save($this->view->form->getFields());
-                    $this->view->id = $session->role_id;
-                    $this->sess->setRequestValue('saved', true);
-                    $this->redirect(BASE_PATH . APP_URI . '/sessions/edit/' . $session->role_id);
-                }
-            }
-
-            $this->send();
-        } else {
-            $this->redirect(BASE_PATH . APP_URI . '/sessions');
-        }
-    }
-
-    /**
-     * Edit action method
+     * Logins action method
      *
      * @param  int $id
      * @return void
      */
-    public function edit($id)
+    public function logins($id = null)
     {
-        $session = new Model\SessionConfig();
-        $session->getById($id);
-
-        $this->prepareView('sessions/edit.phtml');
-        $this->view->title          = 'Modules : Sessions : Edit';
-        $this->view->role           = $session->role;
-        $this->view->rolesAvailable = $session->rolesAvailable();
-
-        $this->view->form = new Form\SessionConfig($id, $this->application->config()['forms']['Phire\Sessions\Form\SessionConfig']);
-        $this->view->form->addFilter('htmlentities', [ENT_QUOTES, 'UTF-8'])
-             ->setFieldValues($session->toArray());
-
+        $session = new Model\UserSession();
         if ($this->request->isPost()) {
-            $this->view->form->addFilter('strip_tags')
-                 ->setFieldValues($this->request->getPost());
+            $session->clear($this->request->getPost());
+            $this->sess->setRequestValue('removed', true);
+            $this->redirect(BASE_PATH . APP_URI . '/sessions/logins/' . $id);
+        } else {
+            if (null !== $id) {
+                $session = new Model\UserSession();
+                $session->getUserData($id);
 
-            if ($this->view->form->isValid()) {
-                $this->view->form->clearFilters()
-                     ->addFilter('html_entity_decode', [ENT_QUOTES, 'UTF-8'])
-                     ->filter();
-                $session = new Model\SessionConfig();
-                $session->update($this->view->form->getFields());
-                $this->view->id = $session->role_id;
-                $this->sess->setRequestValue('saved', true);
-                $this->redirect(BASE_PATH . APP_URI . '/sessions/edit/' . $session->role_id);
+                if (count($session->logins) > $this->config->pagination) {
+                    $page  = $this->request->getQuery('page');
+                    $limit = $this->config->pagination;
+                    $pages = new Paginator(count($session->logins), $limit);
+                    $pages->useInput(true);
+
+                    $offset = ((null !== $page) && ((int)$page > 1)) ?
+                        ($page * $limit) - $limit : 0;
+                    $logins = array_slice($session->logins, $offset, $limit, true);
+                } else {
+                    $pages  = null;
+                    $logins = $session->logins;
+                }
+
+                $this->prepareView('user-logins.phtml');
+                $this->view->title           = 'Sessions : Logins';
+                $this->view->pages           = $pages;
+                $this->view->logins          = $logins;
+                $this->view->total_logins    = count($session->logins);
+                $this->view->failed_attempts = $session->failed_attempts;
+                $this->view->username        = $session->username;
+                $this->view->user_id         = $session->user_id;
+                $this->send();
+            } else {
+                $this->prepareView('logins.phtml');
+                $this->view->title = 'Sessions : Logins';
+
+                $user = new \Phire\Model\User();
+
+                if ($user->hasPages($this->config->pagination, null, null, [])) {
+                    $limit = $this->config->pagination;
+                    $pages = new Paginator($user->getCount(null, null, []), $limit);
+                    $pages->useInput(true);
+                } else {
+                    $limit = null;
+                    $pages = null;
+                }
+
+                $users = $user->getAll(
+                    null, null, [], $limit,
+                    $this->request->getQuery('page'), $this->request->getQuery('sort')
+                );
+
+                foreach ($users as $k => $u) {
+                    $session = new Model\UserSession();
+                    $session->getUserData($u->id);
+                    $users[$k]->logins = (null !== $session->logins) ? $session->logins : [];
+                }
+
+                $this->view->users = $users;
+                $this->view->pages = $pages;
+                $this->send();
             }
         }
-
-        $this->send();
     }
 
     /**
@@ -123,29 +118,11 @@ class IndexController extends AbstractController
     public function remove()
     {
         if ($this->request->isPost()) {
-            $session = new Model\SessionConfig();
+            $session = new Model\UserSession();
             $session->remove($this->request->getPost());
         }
         $this->sess->setRequestValue('removed', true);
         $this->redirect(BASE_PATH . APP_URI . '/sessions');
-    }
-
-    /**
-     * JSON action method to ping the session to prevent logout
-     *
-     * @return void
-     */
-    public function json()
-    {
-        if (isset($this->sess->user) && isset($this->sess->user->session)) {
-            $this->sess->user->session->last = time();
-            $json = ['success' => 1];
-        } else {
-            $json = ['success' => 0];
-        }
-
-        $this->response->setBody(json_encode($json, JSON_PRETTY_PRINT));
-        $this->send(200, ['Content-Type' => 'application/json']);
     }
 
     /**
@@ -156,7 +133,7 @@ class IndexController extends AbstractController
      */
     protected function prepareView($template)
     {
-        $this->viewPath = __DIR__ . '/../../view';
+        $this->viewPath = __DIR__ . '/../../view/sessions';
         parent::prepareView($template);
     }
 
