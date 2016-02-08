@@ -131,24 +131,6 @@ class ConfigController extends AbstractController
     }
 
     /**
-     * JSON action method to ping the session to prevent logout
-     *
-     * @return void
-     */
-    public function json()
-    {
-        if (isset($this->sess->user) && isset($this->sess->user->session)) {
-            $this->sess->user->session->last = time();
-            $json = ['success' => 1];
-        } else {
-            $json = ['success' => 0];
-        }
-
-        $this->response->setBody(json_encode($json, JSON_PRETTY_PRINT));
-        $this->send(200, ['Content-Type' => 'application/json']);
-    }
-
-    /**
      * Prepare view
      *
      * @param  string $template

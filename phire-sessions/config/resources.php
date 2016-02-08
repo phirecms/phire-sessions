@@ -4,6 +4,7 @@ return [
     'sessions' => [
         'index',
         'logins',
+        'json',
         'remove'
     ],
     'sessions-config' => [

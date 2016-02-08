@@ -34,14 +34,6 @@ return [
                 'permission' => 'remove'
             ]
         ],
-        '/sessions/config/json' => [
-            'controller' => 'Phire\Sessions\Controller\ConfigController',
-            'action'     => 'json',
-            'acl'        => [
-                'resource'   => 'sessions-config',
-                'permission' => 'json'
-            ]
-        ],
         '/sessions[/]' => [
             'controller' => 'Phire\Sessions\Controller\IndexController',
             'action'     => 'sessions',
@@ -56,6 +48,14 @@ return [
             'acl'        => [
                 'resource'   => 'sessions',
                 'permission' => 'logins'
+            ]
+        ],
+        '/sessions/json' => [
+            'controller' => 'Phire\Sessions\Controller\IndexController',
+            'action'     => 'json',
+            'acl'        => [
+                'resource'   => 'sessions',
+                'permission' => 'json'
             ]
         ],
         '/sessions/remove' => [
