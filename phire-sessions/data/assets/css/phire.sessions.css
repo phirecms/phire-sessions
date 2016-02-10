@@ -132,8 +132,17 @@
     margin: 0 0 10px 0;
 }
 
-#session-form > dl:nth-child(2) > dd {
-    padding: 0 2px 14px 2px;
+#session-form-field-group-2 {
+    width: calc(100% - 220px);
+}
+
+#session-form-field-group-2 > dt, #session-form-field-group-2 > dd {
+    width: 98%;
+    padding-left: 4px;
+}
+
+#session-form-field-group-2 > dd > textarea {
+    width: 100%;
 }
 
 #users-logins-form {

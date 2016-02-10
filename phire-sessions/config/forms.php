@@ -67,7 +67,7 @@ return [
                 'type'     => 'textarea',
                 'label'    => 'IPs Allowed',
                 'attributes' => [
-                    'rows' => 3,
+                    'rows' => 5,
                     'cols' => 60
                 ]
             ],
@@ -75,7 +75,7 @@ return [
                 'type'     => 'textarea',
                 'label'    => 'IPs Blocked',
                 'attributes' => [
-                    'rows' => 3,
+                    'rows' => 5,
                     'cols' => 60
                 ]
             ],
@@ -83,7 +83,7 @@ return [
                 'type'     => 'textarea',
                 'label'    => 'Log Emails',
                 'attributes' => [
-                    'rows' => 3,
+                    'rows' => 5,
                     'cols' => 60
                 ]
             ]
