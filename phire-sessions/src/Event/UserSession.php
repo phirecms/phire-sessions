@@ -21,17 +21,28 @@ class UserSession
      */
     public static function dashboard(AbstractController $controller, Application $application)
     {
-        if (($controller->request()->getRequestUri() == APP_URI) &&
+        $sess    = $application->getService('session');
+        $userUri = APP_URI;
+        $key     = 'user';
+
+        if (isset($sess->member)) {
+            $key = 'member';
+            $memberAdmin = new \Phire\Members\Model\MembersAdmin();
+            $memberAdmin->getByRoleId($sess->member->role_id);
+            if (isset($memberAdmin->uri)) {
+                $userUri = $memberAdmin->uri;
+            }
+        }
+
+        if (($controller->request()->getRequestUri() == $userUri) &&
             isset($application->module('phire-sessions')['multiple_session_warning']) &&
             ($application->module('phire-sessions')['multiple_session_warning'])) {
-
-            $sess = $application->getService('session');
-            if (isset($sess->user) && isset($sess->user->session)) {
+            if (isset($sess[$key]) && isset($sess[$key]->session)) {
                 $sql = Table\UserSessions::sql();
                 $sql->select()->where('user_id = :user_id')->where('id != :id');
                 $session = Table\UserSessions::execute((string)$sql, [
-                    'user_id' => $sess->user->id,
-                    'id'      => $sess->user->session->id
+                    'user_id' => $sess[$key]->id,
+                    'id'      => $sess[$key]->session->id
                 ]);
                 if (isset($session->id)) {
                     $controller->view()->sessionWarning = true;
@@ -49,41 +60,53 @@ class UserSession
      */
     public static function login(AbstractController $controller, Application $application)
     {
-        $sess = $application->getService('session');
+        $sess    = $application->getService('session');
+        $userUri = APP_URI;
+        $key     = 'user';
 
-        $path = BASE_PATH . APP_URI;
+        if (isset($sess->member)) {
+            $key = 'member';
+            $memberAdmin = new \Phire\Members\Model\MembersAdmin();
+            $memberAdmin->getByRoleId($sess->member->role_id);
+            if (isset($memberAdmin->uri)) {
+                $userUri = $memberAdmin->uri;
+            }
+        }
+
+        $path = BASE_PATH . $userUri;
         if ($path == '') {
             $path = '/';
         }
+
         $cookie = Cookie::getInstance(['path' => $path]);
         $cookie->delete('phire_session_timeout');
         $cookie->delete('phire_session_path');
 
         // If login, validate and start new session
         if (($controller->request()->isPost()) &&
-            ($controller->request()->getRequestUri() == APP_URI . '/login')) {
+            (substr($controller->request()->getRequestUri(), -6) == '/login')) {
             // If the user successfully logged in
-            if (isset($sess->user)) {
-                $config = Table\UserSessionConfig::findById($sess->user->role_id);
-                $data   = Table\UserSessionData::findById($sess->user->id);
+            if (isset($sess[$key])) {
+                $config = Table\UserSessionConfig::findById($sess[$key]->role_id);
+                $data   = Table\UserSessionData::findById($sess[$key]->id);
                 if (isset($config->role_id)) {
-                    if (!self::validate($config, $sess->user, $data)) {
+                    if (!self::validate($config, $sess[$key], $data)) {
                         if (isset($data->user_id)) {
                             $data->failed_attempts++;
                             $data->save();
                         } else {
                             $data = new Table\UserSessionData([
-                                'user_id'         => $sess->user->id,
+                                'user_id'         => $sess[$key]->id,
                                 'logins'          => null,
                                 'failed_attempts' => 1
                             ]);
                             $data->save();
                         }
                         if (isset($config->role_id) && ((int)$config->log_type > 0) && (null !== $config->log_emails)) {
-                            self::log($config, $sess->user, false);
+                            self::log($config, $sess[$key], false);
                         }
                         $sess->kill();
-                        Response::redirect(BASE_PATH . APP_URI . '/login?failed=' . $data->failed_attempts);
+                        Response::redirect(BASE_PATH . $userUri . '/login?failed=' . $data->failed_attempts);
                         exit();
                     } else {
                         if (isset($data->user_id)) {
@@ -102,7 +125,7 @@ class UserSession
                             $data->save();
                         } else {
                             $data = new Table\UserSessionData([
-                                'user_id' => $sess->user->id,
+                                'user_id' => $sess[$key]->id,
                                 'logins'  => serialize([time() => [
                                     'ua'  => $_SERVER['HTTP_USER_AGENT'],
                                     'ip'  => $_SERVER['REMOTE_ADDR']
@@ -123,7 +146,7 @@ class UserSession
                 $lastIp    = null;
 
                 // Check for the last login
-                $data = Table\UserSessionData::findById($sess->user->id);
+                $data = Table\UserSessionData::findById($sess[$key]->id);
                 if (isset($data->user_id)) {
                     $logins = (null !== $data->logins) ? unserialize($data->logins) : [];
                     if (count($logins) > 1) {
@@ -146,13 +169,13 @@ class UserSession
                 }
 
                 $session = new Table\UserSessions([
-                    'user_id' => $sess->user->id,
+                    'user_id' => $sess[$key]->id,
                     'ip'      => $_SERVER['REMOTE_ADDR'],
                     'ua'      => $_SERVER['HTTP_USER_AGENT'],
                     'start'   => time()
                 ]);
                 $session->save();
-                $sess->user->session = new \ArrayObject([
+                $sess[$key]->session = new \ArrayObject([
                     'id'         => $session->id,
                     'start'      => $session->start,
                     'last'       => $session->start,
@@ -162,9 +185,9 @@ class UserSession
                     'last_ip'    => $lastIp
                 ], \ArrayObject::ARRAY_AS_PROPS);
                 if (isset($config->role_id) && ((int)$config->log_type > 0) && (null !== $config->log_emails)) {
-                    self::log($config, $sess->user, true);
+                    self::log($config, $sess[$key], true);
                 }
-                // Else, if the user login failed
+            // Else, if the user login failed
             } else {
                 if ((null !== $controller->view()->form) && (null !== $controller->view()->form->username)) {
                     $user   = \Phire\Table\Users::findBy(['username' => $controller->view()->form->username]);
@@ -188,24 +211,24 @@ class UserSession
                     }
                 }
             }
-            // Check existing session
-        } else if (isset($sess->user) && isset($sess->user->session)) {
-            if ((!isset(Table\UserSessions::findById((int)$sess->user->session->id)->id)) ||
-                ((null !== $sess->user->session->expire) &&
-                    ((time() - $sess->user->session->last) >= $sess->user->session->expire))) {
-                $session = Table\UserSessions::findById((int)$sess->user->session->id);
+        // Check existing session
+        } else if (isset($sess[$key]) && isset($sess[$key]->session)) {
+            if ((!isset(Table\UserSessions::findById((int)$sess[$key]->session->id)->id)) ||
+                ((null !== $sess[$key]->session->expire) &&
+                    ((time() - $sess[$key]->session->last) >= $sess[$key]->session->expire))) {
+                $session = Table\UserSessions::findById((int)$sess[$key]->session->id);
                 if (isset($session->id)) {
                     $session->delete();
                 }
                 $sess->kill();
-                Response::redirect(BASE_PATH . APP_URI . '/login?expired=1');
+                Response::redirect(BASE_PATH . $userUri . '/login?expired=1');
                 exit();
             } else {
-                if (($sess->user->session->timeout) && (null !== $sess->user->session->expire)) {
-                    $cookie->set('phire_session_timeout', $sess->user->session->expire - 30);
-                    $cookie->set('phire_session_path', BASE_PATH . APP_URI);
+                if (($sess[$key]->session->timeout) && (null !== $sess[$key]->session->expire)) {
+                    $cookie->set('phire_session_timeout', $sess[$key]->session->expire - 30);
+                    $cookie->set('phire_session_path', BASE_PATH . $userUri);
                 }
-                $sess->user->session->last = time();
+                $sess[$key]->session->last = time();
             }
         }
     }
@@ -218,7 +241,20 @@ class UserSession
      */
     public static function logout(Application $application)
     {
-        if ($application->router()->getRouteMatch()->getRoute() == APP_URI . '/logout') {
+        $sess    = $application->getService('session');
+        $userUri = APP_URI;
+        $key     = 'user';
+
+        if (isset($sess->member)) {
+            $key = 'member';
+            $memberAdmin = new \Phire\Members\Model\MembersAdmin();
+            $memberAdmin->getByRoleId($sess->member->role_id);
+            if (isset($memberAdmin->uri)) {
+                $userUri = $memberAdmin->uri;
+            }
+        }
+
+        if ($application->router()->getRouteMatch()->getRoute() == $userUri . '/logout') {
             $path = BASE_PATH . APP_URI;
             if ($path == '') {
                 $path = '/';
@@ -229,8 +265,8 @@ class UserSession
             $cookie->delete('phire_session_warning_dismiss');
 
             $sess = $application->getService('session');
-            if (isset($sess->user) && isset($sess->user->session)) {
-                $session = Table\UserSessions::findById((int)$sess->user->session->id);
+            if (isset($sess[$key]) && isset($sess[$key]->session)) {
+                $session = Table\UserSessions::findById((int)$sess[$key]->session->id);
                 if (isset($session->id)) {
                     $session->delete();
                 }
@@ -303,8 +339,8 @@ class UserSession
             ];
 
             $message = ($success) ?
-                'Someone has logged in as \'' . $user->username . '\' from ' . $_SERVER['REMOTE_ADDR'] :
-                'Someone attempted to log in as \'' . $user->username . '\' from ' . $_SERVER['REMOTE_ADDR'];
+                'Someone has logged in at ' . $_SERVER['REQUEST_URI'] . ' as \'' . $user->username . '\' from ' . $_SERVER['REMOTE_ADDR'] :
+                'Someone attempted to log in at ' . $_SERVER['REQUEST_URI'] . ' as \'' . $user->username . '\' from ' . $_SERVER['REMOTE_ADDR'];
 
             $emails = explode(',', $config->log_emails);
             if (count($emails) > 0) {

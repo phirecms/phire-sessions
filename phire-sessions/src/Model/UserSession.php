@@ -25,8 +25,11 @@ class UserSession extends AbstractModel
             'ip'           => DB_PREFIX . 'user_sessions.ip',
             'ua'           => DB_PREFIX . 'user_sessions.ua',
             'start'        => DB_PREFIX . 'user_sessions.start',
-            'username'     => DB_PREFIX . 'users.username'
-        ])->join(DB_PREFIX . 'users', [DB_PREFIX . 'users.id' => DB_PREFIX . 'user_sessions.user_id']);
+            'username'     => DB_PREFIX . 'users.username',
+            'role_id'      => DB_PREFIX . 'users.role_id',
+            'role_name'    => DB_PREFIX . 'roles.name'
+        ])->join(DB_PREFIX . 'users', [DB_PREFIX . 'users.id' => DB_PREFIX . 'user_sessions.user_id'])
+          ->join(DB_PREFIX . 'roles', [DB_PREFIX . 'users.role_id' => DB_PREFIX . 'roles.id']);
 
         if (null !== $limit) {
             $page = ((null !== $page) && ((int)$page > 1)) ?

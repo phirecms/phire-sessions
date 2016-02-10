@@ -11,6 +11,7 @@
             <tr>
                 <th><a href="<?=$phireUri . '/sessions?sort=id';?>">#</a></th>
                 <th><a href="<?=$phireUri . '/sessions?sort=username';?>">Username</a></th>
+                <th><a href="<?=$phireUri . '/sessions?sort=role_name';?>">Role</a></th>
                 <th>IP</th>
                 <th>User Agent</th>
                 <th><a href="<?=$phireUri . '/sessions?sort=start';?>">Start</a></th>
@@ -33,6 +34,7 @@ foreach ($sessions as $session):
             <tr>
                 <td><?=$session->id; ?></td>
                 <td><?=$session->username; ?></td>
+                <td><?=$session->role_name; ?></td>
                 <td><?=$session->ip; ?></td>
                 <td><?=$session->ua; ?></td>
                 <td><?=date('M j Y H:i:s', $session->start); ?> [ <?=$ago; ?> ]</td>
