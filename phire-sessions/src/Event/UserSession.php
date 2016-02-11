@@ -25,7 +25,7 @@ class UserSession
         $userUri = APP_URI;
         $key     = 'user';
 
-        if (isset($sess->member)) {
+        if (isset($sess->member) && $application->isRegistered('phire-members')) {
             $key = 'member';
             $memberAdmin = new \Phire\Members\Model\MembersAdmin();
             $memberAdmin->getByRoleId($sess->member->role_id);
@@ -64,7 +64,7 @@ class UserSession
         $userUri = APP_URI;
         $key     = 'user';
 
-        if (isset($sess->member)) {
+        if (isset($sess->member) && $application->isRegistered('phire-members')) {
             $key = 'member';
             $memberAdmin = new \Phire\Members\Model\MembersAdmin();
             $memberAdmin->getByRoleId($sess->member->role_id);
@@ -245,7 +245,7 @@ class UserSession
         $userUri = APP_URI;
         $key     = 'user';
 
-        if (isset($sess->member)) {
+        if (isset($sess->member) && $application->isRegistered('phire-members')) {
             $key = 'member';
             $memberAdmin = new \Phire\Members\Model\MembersAdmin();
             $memberAdmin->getByRoleId($sess->member->role_id);
