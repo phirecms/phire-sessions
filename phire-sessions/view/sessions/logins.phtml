@@ -17,18 +17,18 @@
             <th class="text-center">Manage</th>
         </tr>
 <?php $i = 1; ?>
-<?php foreach ($users as $user): ?>
+<?php foreach ($users as $u): ?>
         <tr>
-            <td><?=$user->id; ?></td>
-            <td><?=$user->username; ?></td>
-            <td><?=$user->role_name; ?></td>
-            <td><?=count($user->logins); ?></td>
-            <td><?php if (count($user->logins) > 0):
-$keys = array_keys($user->logins);
+            <td><?=$u->id; ?></td>
+            <td><?=$u->username; ?></td>
+            <td><?=$u->role_name; ?></td>
+            <td><?=count($u->logins); ?></td>
+            <td><?php if (count($u->logins) > 0):
+$keys = array_keys($u->logins);
 $ts   = $keys[0];
-echo date('M j Y H:i:s', $ts) . ' &nbsp; [ ' . $user->logins[$ts]['ip'] . ' ]';
+echo date('M j Y H:i:s', $ts) . ' &nbsp; [ ' . $u->logins[$ts]['ip'] . ' ]';
 else: ?>N/A<?php endif; ?></td>
-            <td class="text-center"><?php if ($acl->isAllowed($user->role_name, 'sessions', 'logins')): ?><a class="edit-link" href="<?=$phireUri . '/sessions/logins/' . $user->id; ?>">Edit</a><?php else: ?>&nbsp;<?php endif; ?></td>
+            <td class="text-center"><?php if ($acl->isAllowed($user->role, 'sessions', 'logins')): ?><a class="edit-link" href="<?=$phireUri . '/sessions/logins/' . $u->id; ?>">Edit</a><?php else: ?>&nbsp;<?php endif; ?></td>
         </tr>
 <?php endforeach; ?>
     </table>
