@@ -1,11 +1,32 @@
 <?php
+/**
+ * Phire Sessions Module
+ *
+ * @link       https://github.com/phirecms/phire-sessions
+ * @author     Nick Sagona, III <dev@nolainteractive.com>
+ * @copyright  Copyright (c) 2009-2016 NOLA Interactive, LLC. (http://www.nolainteractive.com)
+ * @license    http://www.phirecms.org/license     New BSD License
+ */
 
+/**
+ * @namespace
+ */
 namespace Phire\Sessions\Model;
 
 use Phire\Model\AbstractModel;
 use Pop\Http\Response;
 use Phire\Sessions\Table;
 
+/**
+ * Session Config Model class
+ *
+ * @category   Phire\Sessions
+ * @package    Phire\Sessions
+ * @author     Nick Sagona, III <dev@nolainteractive.com>
+ * @copyright  Copyright (c) 2009-2016 NOLA Interactive, LLC. (http://www.nolainteractive.com)
+ * @license    http://www.phirecms.org/license     New BSD License
+ * @version    1.0.0
+ */
 class SessionConfig extends AbstractModel
 {
 

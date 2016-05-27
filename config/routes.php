@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * phire-sessions routes
+ */
 return [
     APP_URI => [
         '/sessions/config[/]' => [

@@ -1,5 +1,16 @@
 <?php
+/**
+ * Phire Sessions Module
+ *
+ * @link       https://github.com/phirecms/phire-sessions
+ * @author     Nick Sagona, III <dev@nolainteractive.com>
+ * @copyright  Copyright (c) 2009-2016 NOLA Interactive, LLC. (http://www.nolainteractive.com)
+ * @license    http://www.phirecms.org/license     New BSD License
+ */
 
+/**
+ * @namespace
+ */
 namespace Phire\Sessions\Controller;
 
 use Phire\Sessions\Model;
@@ -8,6 +19,16 @@ use Phire\Sessions\Table;
 use Phire\Controller\AbstractController;
 use Pop\Paginator\Paginator;
 
+/**
+ * Sessions Config Controller class
+ *
+ * @category   Phire\Sessions
+ * @package    Phire\Sessions
+ * @author     Nick Sagona, III <dev@nolainteractive.com>
+ * @copyright  Copyright (c) 2009-2016 NOLA Interactive, LLC. (http://www.nolainteractive.com)
+ * @license    http://www.phirecms.org/license     New BSD License
+ * @version    1.0.0
+ */
 class ConfigController extends AbstractController
 {
 

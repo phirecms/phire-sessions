@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * phire-sessions resources
+ */
 return [
     'sessions' => [
         'index',

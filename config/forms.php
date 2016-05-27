@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * phire-sessions form configuration
+ */
 return [
     'Phire\Sessions\Form\SessionConfig' => [
         [

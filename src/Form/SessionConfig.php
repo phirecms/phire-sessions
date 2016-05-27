@@ -1,11 +1,32 @@
 <?php
+/**
+ * Phire Sessions Module
+ *
+ * @link       https://github.com/phirecms/phire-sessions
+ * @author     Nick Sagona, III <dev@nolainteractive.com>
+ * @copyright  Copyright (c) 2009-2016 NOLA Interactive, LLC. (http://www.nolainteractive.com)
+ * @license    http://www.phirecms.org/license     New BSD License
+ */
 
+/**
+ * @namespace
+ */
 namespace Phire\Sessions\Form;
 
 use Phire\Table;
 use Pop\Form\Form;
 use Pop\Validator;
 
+/**
+ * Session Config Form class
+ *
+ * @category   Phire\Sessions
+ * @package    Phire\Sessions
+ * @author     Nick Sagona, III <dev@nolainteractive.com>
+ * @copyright  Copyright (c) 2009-2016 NOLA Interactive, LLC. (http://www.nolainteractive.com)
+ * @license    http://www.phirecms.org/license     New BSD License
+ * @version    1.0.0
+ */
 class SessionConfig extends Form
 {
 
