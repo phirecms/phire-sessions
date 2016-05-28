@@ -151,16 +151,30 @@
     padding: 5px 0 0 0;
 }
 
-.sessions-nav-icon {
-    background-image: url(../img/sessions-icon-sm.png);
-    background-position: 8px center;
-    background-repeat: no-repeat;
+.sessions-nav-icon:before {
+    font-family: "FontAwesome";
+    font-weight: normal;
+    content: "\f017";
+    display: inline-block;
+    margin: 0;
+    padding: 0 5px 0 0;
+    vertical-align: middle;
+    color: #b4b5b4;
+    font-size: 1.5em;
+    width: 25px;
+    text-align: center;
 }
 
 .sessions-header {
     margin: 10px 0 10px 0;
-    padding: 10px 0 10px 40px;
-    background-image: url(../img/sessions-icon-lg.png);
-    background-position: left center;
-    background-repeat: no-repeat;
+    padding: 10px 0 10px 0;
+}
+
+.sessions-header:before {
+    font-family: "FontAwesome";
+    font-weight: normal;
+    content: "\f017";
+    margin: 0;
+    padding: 0 8px 0 0;
+    color: #b4b5b4;
 }
