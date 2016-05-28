@@ -51,7 +51,7 @@ class ConfigController extends AbstractController
         }
 
         $this->prepareView('config/index.phtml');
-        $this->view->title          = 'Modules : Sessions Config';
+        $this->view->title          = 'Sessions Config';
         $this->view->pages          = $pages;
         $this->view->sessions       = $session->getAll(
             $limit, $this->request->getQuery('page'), $this->request->getQuery('sort')
@@ -70,7 +70,7 @@ class ConfigController extends AbstractController
     {
         if ((new Model\SessionConfig())->rolesAvailable()) {
             $this->prepareView('config/add.phtml');
-            $this->view->title = 'Modules : Sessions Config : Add';
+            $this->view->title = 'Sessions Config : Add';
 
             $this->view->form = new Form\SessionConfig(null, $this->application->config()['forms']['Phire\Sessions\Form\SessionConfig']);
 
@@ -109,7 +109,7 @@ class ConfigController extends AbstractController
         $session->getById($id);
 
         $this->prepareView('config/edit.phtml');
-        $this->view->title          = 'Modules : Sessions Config';
+        $this->view->title          = 'Sessions Config';
         $this->view->role           = $session->role;
         $this->view->rolesAvailable = $session->rolesAvailable();
 
