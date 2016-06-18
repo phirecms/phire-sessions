@@ -210,7 +210,7 @@ class UserSession
                 }
             // Else, if the user login failed
             } else {
-                if ((null !== $controller->view()->form) && (null !== $controller->view()->form->username)) {
+                if ((null !== $controller->view()->form) && ($controller->view()->form !== false) && (null !== $controller->view()->form->username)) {
                     $user   = \Phire\Table\Users::findBy(['username' => $controller->view()->form->username]);
                     $config = Table\UserSessionConfig::findById($user->role_id);
                     if (isset($user->id)) {
