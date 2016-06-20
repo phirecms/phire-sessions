@@ -32,12 +32,14 @@ class UserSession extends AbstractModel
     /**
      * Get all user sessions
      *
+     * @param  int    $roleId
+     * @param  array  $search
      * @param  int    $limit
      * @param  int    $page
      * @param  string $sort
      * @return array
      */
-    public function getAll($limit = null, $page = null, $sort = null)
+    public function getAll($roleId = null, array $search = null, $limit = null, $page = null, $sort = null)
     {
         $sql = Table\UserSessions::sql();
         $sql->select([
@@ -46,8 +48,16 @@ class UserSession extends AbstractModel
             'ip'           => DB_PREFIX . 'user_sessions.ip',
             'ua'           => DB_PREFIX . 'user_sessions.ua',
             'start'        => DB_PREFIX . 'user_sessions.start',
+            'user_role_id' => DB_PREFIX . 'users.role_id',
             'username'     => DB_PREFIX . 'users.username',
-            'role_id'      => DB_PREFIX . 'users.role_id',
+            'first_name'   => DB_PREFIX . 'users.first_name',
+            'last_name'    => DB_PREFIX . 'users.last_name',
+            'company'      => DB_PREFIX . 'users.company',
+            'title'        => DB_PREFIX . 'users.title',
+            'email'        => DB_PREFIX . 'users.email',
+            'active'       => DB_PREFIX . 'users.active',
+            'verified'     => DB_PREFIX . 'users.verified',
+            'role_id'      => DB_PREFIX . 'roles.id',
             'role_name'    => DB_PREFIX . 'roles.name'
         ])->join(DB_PREFIX . 'users', [DB_PREFIX . 'users.id' => DB_PREFIX . 'user_sessions.user_id'])
           ->join(DB_PREFIX . 'roles', [DB_PREFIX . 'users.role_id' => DB_PREFIX . 'roles.id']);
@@ -64,9 +74,29 @@ class UserSession extends AbstractModel
         $by     = explode(' ', $order);
         $sql->select()->orderBy($by[0], $by[1]);
 
-        return (count($params) > 0) ?
-            Table\UserSessions::execute((string)$sql, $params)->rows() :
-            Table\UserSessions::query((string)$sql)->rows();
+        if (null !== $search) {
+            $sql->select()->where($search['by'] . ' LIKE :' . $search['by']);
+            $params[$search['by']] = $search['for'] . '%';
+        }
+
+        if (null !== $roleId) {
+            if ($roleId == 0) {
+                $sql->select()->where(DB_PREFIX . 'users.role_id IS NULL');
+                $rows = (count($params) > 0) ?
+                    Table\UserSessions::execute((string)$sql, $params)->rows() :
+                    Table\UserSessions::query((string)$sql)->rows();
+            } else {
+                $sql->select()->where(DB_PREFIX . 'users.role_id = :role_id');
+                $params['role_id'] = $roleId;
+                $rows = Table\UserSessions::execute((string)$sql, $params)->rows();
+            }
+        } else {
+            $rows = (count($params) > 0) ?
+                Table\UserSessions::execute((string)$sql, $params)->rows() :
+                Table\UserSessions::query((string)$sql)->rows();
+        }
+
+        return $rows;
     }
 
     /**

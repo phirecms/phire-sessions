@@ -1,4 +1,28 @@
 <?php include $phireHeader; ?>
+<?php if (count($roles) > 0): ?>
+    <form id="asset-search-form" action="<?=$phireUri . '/sessions'; ?>" method="get">
+        <div><input tabindex="4" type="submit" id="submit" value="Search" /></div>
+        <div>
+            <select tabindex="3" id="role_id" name="role_id">
+                <option value="----">----</option>
+<?php foreach ($roles as $id => $role): ?>
+<?php if (($acl->hasResource('users-of-role-' . $id)) && ($acl->isAllowed($user->role, 'users-of-role-' . $id, 'index'))): ?>
+                <option value="<?=$id; ?>"<?=(((!empty($_GET['role_id']) && ((int)$_GET['role_id'] == (int)$id))) ? ' selected="selected"' : null); ?>><?=$role; ?></option>
+<?php endif; ?>
+<?php endforeach; ?>
+            </select>
+        </div>
+        <div>
+            <select tabindex="2" id="search_by" name="search_by">
+                <option value="----">Search by</option>
+                <option value="username"<?=(('username' == $searchBy) ? ' selected="selected"' : null); ?>>Username</option>
+                <option value="first_name"<?=(('first_name' == $searchBy) ? ' selected="selected"' : null); ?>>First Name</option>
+                <option value="last_name"<?=(('last_name' == $searchBy) ? ' selected="selected"' : null); ?>>Last Name</option>
+            </select>
+        </div>
+        <div><input tabindex="1" type="text" name="search_for" id="search_for" value="<?=((null !== $searchFor) ? $searchFor : null); ?>" placeholder="Search for" size="15" /></div>
+    </form>
+<?php endif; ?>
     <h1 class="sessions-header"><?=$title; ?></h1>
 <?php if (count($sessions) > 0): ?>
 <?php if (null !== $pages): ?>
@@ -11,6 +35,8 @@
             <tr>
                 <th><a href="<?=$phireUri . '/sessions?sort=id';?>">#</a></th>
                 <th><a href="<?=$phireUri . '/sessions?sort=username';?>">Username</a></th>
+                <th><a href="<?=$phireUri . '/sessions?sort=first_name';?>">First Name</a></th>
+                <th><a href="<?=$phireUri . '/sessions?sort=last_name';?>">Last Name</a></th>
                 <th><a href="<?=$phireUri . '/sessions?sort=role_name';?>">Role</a></th>
                 <th>IP</th>
                 <th>User Agent</th>
@@ -34,6 +60,8 @@ foreach ($sessions as $session):
             <tr>
                 <td><?=$session->id; ?></td>
                 <td><?=$session->username; ?></td>
+                <td><?=$session->first_name; ?></td>
+                <td><?=$session->last_name; ?></td>
                 <td><?=$session->role_name; ?></td>
                 <td><?=$session->ip; ?></td>
                 <td><?=$session->ua; ?></td>

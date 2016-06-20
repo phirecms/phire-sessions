@@ -38,6 +38,18 @@ class IndexController extends AbstractController
     public function sessions()
     {
         $session = new Model\UserSession();
+        $user    = new \Phire\Model\User();
+
+        $searchAry = null;
+        if ((null !== $this->request->getQuery('search_for')) &&
+            (null !== $this->request->getQuery('search_by')) &&
+            ($this->request->getQuery('search_for') != '') &&
+            ($this->request->getQuery('search_by') != '----')) {
+            $searchAry = [
+                'for' => $this->request->getQuery('search_for'),
+                'by'  => $this->request->getQuery('search_by')
+            ];
+        }
 
         if ($session->hasPages($this->config->pagination)) {
             $limit = $this->config->pagination;
@@ -48,11 +60,17 @@ class IndexController extends AbstractController
             $pages = null;
         }
 
+        $roleId = ((null !== $this->request->getQuery('role_id')) && ($this->request->getQuery('role_id') != '----')) ?
+            (int)$this->request->getQuery('role_id') : null;
+
         $this->prepareView('index.phtml');
-        $this->view->title    = 'Sessions';
-        $this->view->pages    = $pages;
-        $this->view->sessions = $session->getAll(
-            $limit, $this->request->getQuery('page'), $this->request->getQuery('sort')
+        $this->view->title     = 'Sessions';
+        $this->view->pages     = $pages;
+        $this->view->searchFor = $this->request->getQuery('search_for');
+        $this->view->searchBy  = $this->request->getQuery('search_by');
+        $this->view->roles     = $user->getRoles();
+        $this->view->sessions  = $session->getAll(
+            $roleId, $searchAry, $limit, $this->request->getQuery('page'), $this->request->getQuery('sort')
         );
         $this->send();
     }
@@ -66,6 +84,8 @@ class IndexController extends AbstractController
     public function logins($id = null)
     {
         $session = new Model\UserSession();
+        $user    = new \Phire\Model\User();
+
         if ($this->request->isPost()) {
             $session->clear($this->request->getPost());
             $this->sess->setRequestValue('removed', true);
@@ -102,7 +122,19 @@ class IndexController extends AbstractController
                 $this->prepareView('logins.phtml');
                 $this->view->title = 'Sessions : Logins';
 
-                $user = new \Phire\Model\User();
+                $searchAry = null;
+                if ((null !== $this->request->getQuery('search_for')) &&
+                    (null !== $this->request->getQuery('search_by')) &&
+                    ($this->request->getQuery('search_for') != '') &&
+                    ($this->request->getQuery('search_by') != '----')) {
+                    $searchAry = [
+                        'for' => $this->request->getQuery('search_for'),
+                        'by'  => $this->request->getQuery('search_by')
+                    ];
+                }
+
+                $roleId = ((null !== $this->request->getQuery('role_id')) && ($this->request->getQuery('role_id') != '----')) ?
+                    (int)$this->request->getQuery('role_id') : null;
 
                 if ($user->hasPages($this->config->pagination, null, null, [])) {
                     $limit = $this->config->pagination;
@@ -114,7 +146,7 @@ class IndexController extends AbstractController
                 }
 
                 $users = $user->getAll(
-                    null, null, [], $limit,
+                    $roleId, $searchAry, [], $limit,
                     $this->request->getQuery('page'), $this->request->getQuery('sort')
                 );
 
@@ -124,8 +156,11 @@ class IndexController extends AbstractController
                     $users[$k]->logins = (null !== $session->logins) ? $session->logins : [];
                 }
 
-                $this->view->users = $users;
-                $this->view->pages = $pages;
+                $this->view->users     = $users;
+                $this->view->pages     = $pages;
+                $this->view->searchFor = $this->request->getQuery('search_for');
+                $this->view->searchBy  = $this->request->getQuery('search_by');
+                $this->view->roles     = $user->getRoles();
                 $this->send();
             }
         }
