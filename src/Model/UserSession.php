@@ -116,7 +116,7 @@ class UserSession extends AbstractModel
                 $this->data['logins'] = unserialize($data['logins']);
                 krsort($this->data['logins']);
             }
-            $this->data['total_logins']    = $data['total_logins'];
+            $this->data['total_logins']    = (int)$data['total_logins'];
             $this->data['failed_attempts'] = $data['failed_attempts'];
         } else {
             $this->data['logins']          = [];
