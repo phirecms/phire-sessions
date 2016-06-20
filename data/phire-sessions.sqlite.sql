@@ -42,6 +42,7 @@ CREATE INDEX "sess_role_id" ON "[{prefix}]user_session_config" ("role_id");
 CREATE TABLE IF NOT EXISTS "[{prefix}]user_session_data" (
   "user_id" integer,
   "logins" text,
+  "total_logins" integer,
   "failed_attempts" integer,
   UNIQUE ("user_id"),
   CONSTRAINT "fk_sess_data_user_id" FOREIGN KEY ("user_id") REFERENCES "[{prefix}]users" ("id") ON DELETE CASCADE ON UPDATE CASCADE

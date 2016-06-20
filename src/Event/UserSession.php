@@ -141,6 +141,7 @@ class UserSession
                                 'ua' => $_SERVER['HTTP_USER_AGENT'],
                                 'ip' => $_SERVER['REMOTE_ADDR']
                             ];
+                            $data->total_logins++;
                             $data->failed_attempts = 0;
                             $data->logins          = serialize($logins);
                             $data->save();
@@ -151,6 +152,7 @@ class UserSession
                                     'ua'  => $_SERVER['HTTP_USER_AGENT'],
                                     'ip'  => $_SERVER['REMOTE_ADDR']
                                 ]]),
+                                'total_logins'    => 1,
                                 'failed_attempts' => 0
                             ]);
                             $data->save();

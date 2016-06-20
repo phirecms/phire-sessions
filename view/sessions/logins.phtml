@@ -51,7 +51,7 @@
             <td><?=$u->first_name; ?></td>
             <td><?=$u->last_name; ?></td>
             <td><?=$u->role_name; ?></td>
-            <td><?=count($u->logins); ?></td>
+            <td><?=$u->total_logins; ?></td>
             <td><?=$u->failed_attempts; ?></td>
             <td><?php if (count($u->logins) > 0):
 $keys = array_keys($u->logins);

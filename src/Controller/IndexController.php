@@ -113,7 +113,7 @@ class IndexController extends AbstractController
                 $this->view->title           = 'Sessions : Logins';
                 $this->view->pages           = $pages;
                 $this->view->logins          = $logins;
-                $this->view->total_logins    = count($session->logins);
+                $this->view->total_logins    = $session->total_logins;
                 $this->view->failed_attempts = $session->failed_attempts;
                 $this->view->username        = $session->username;
                 $this->view->user_id         = $session->user_id;
@@ -154,6 +154,7 @@ class IndexController extends AbstractController
                     $session = new Model\UserSession();
                     $session->getUserData($u->id);
                     $users[$k]->logins          = (null !== $session->logins) ? $session->logins : [];
+                    $users[$k]->total_logins    = (null !== $session->total_logins) ? $session->total_logins : 0;
                     $users[$k]->failed_attempts = (null !== $session->failed_attempts) ? $session->failed_attempts : 0;
                 }
 

@@ -116,9 +116,11 @@ class UserSession extends AbstractModel
                 $this->data['logins'] = unserialize($data['logins']);
                 krsort($this->data['logins']);
             }
+            $this->data['total_logins']    = $data['total_logins'];
             $this->data['failed_attempts'] = $data['failed_attempts'];
         } else {
             $this->data['logins']          = [];
+            $this->data['total_logins']    = 0;
             $this->data['failed_attempts'] = 0;
         }
 
@@ -156,7 +158,8 @@ class UserSession extends AbstractModel
             $session = Table\UserSessionData::findById((int)$post['user_id']);
             if (isset($session->user_id)) {
                 if (isset($post['clear_logins'])) {
-                    $session->logins = null;
+                    $session->logins       = null;
+                    $session->total_logins = 0;
                 }
                 if (isset($post['clear_failed_attempts'])) {
                     $session->failed_attempts = 0;
