@@ -153,7 +153,8 @@ class IndexController extends AbstractController
                 foreach ($users as $k => $u) {
                     $session = new Model\UserSession();
                     $session->getUserData($u->id);
-                    $users[$k]->logins = (null !== $session->logins) ? $session->logins : [];
+                    $users[$k]->logins          = (null !== $session->logins) ? $session->logins : [];
+                    $users[$k]->failed_attempts = (null !== $session->failed_attempts) ? $session->failed_attempts : 0;
                 }
 
                 $this->view->users     = $users;

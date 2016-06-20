@@ -39,6 +39,7 @@
             <th>Last Name</th>
             <th>Role</th>
             <th>Logins</th>
+            <th>Failed Attempts</th>
             <th>Last Login</th>
             <th class="text-center">Manage</th>
         </tr>
@@ -51,6 +52,7 @@
             <td><?=$u->last_name; ?></td>
             <td><?=$u->role_name; ?></td>
             <td><?=count($u->logins); ?></td>
+            <td><?=$u->failed_attempts; ?></td>
             <td><?php if (count($u->logins) > 0):
 $keys = array_keys($u->logins);
 $ts   = $keys[0];
