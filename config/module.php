@@ -58,17 +58,19 @@ return [
             ]
         ],
         'uninstall' => function(){
-            $path = BASE_PATH . APP_URI;
-            if ($path == '') {
-                $path = '/';
-            }
-            $cookie = \Pop\Web\Cookie::getInstance(['path' => $path]);
-            $cookie->delete('phire_session_timeout');
-            $cookie->delete('phire_session_path');
+            if (isset($_SERVER['REMOTE_ADDR'])) {
+                $path = BASE_PATH . APP_URI;
+                if ($path == '') {
+                    $path = '/';
+                }
+                $cookie = \Pop\Web\Cookie::getInstance(['path' => $path]);
+                $cookie->delete('phire_session_timeout');
+                $cookie->delete('phire_session_path');
 
-            $sess = \Pop\Web\Session::getInstance();
-            if (isset($sess->user) && isset($sess->user->session)) {
-                unset($sess->user->session);
+                $sess = \Pop\Web\Session::getInstance();
+                if (isset($sess->user) && isset($sess->user->session)) {
+                    unset($sess->user->session);
+                }
             }
         },
         'header'                   => __DIR__ . '/../view/phire/header.phtml',
