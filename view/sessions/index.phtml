@@ -33,11 +33,11 @@
 <?php endif; ?>
         <table class="data-table" cellpadding="0" cellspacing="0" border="0">
             <tr>
-                <th><a href="<?=$phireUri . '/sessions?sort=id';?>">#</a></th>
-                <th><a href="<?=$phireUri . '/sessions?sort=username';?>">Username</a></th>
-                <th><a href="<?=$phireUri . '/sessions?sort=first_name';?>">First Name</a></th>
-                <th><a href="<?=$phireUri . '/sessions?sort=last_name';?>">Last Name</a></th>
-                <th><a href="<?=$phireUri . '/sessions?sort=role_name';?>">Role</a></th>
+                <th><a href="<?=$phireUri . '/sessions?sort=id' . (($queryString != '') ? '&' . $queryString : '');?>">#</a></th>
+                <th><a href="<?=$phireUri . '/sessions?sort=username' . (($queryString != '') ? '&' . $queryString : '');?>">Username</a></th>
+                <th><a href="<?=$phireUri . '/sessions?sort=first_name' . (($queryString != '') ? '&' . $queryString : '');?>">First Name</a></th>
+                <th><a href="<?=$phireUri . '/sessions?sort=last_name' . (($queryString != '') ? '&' . $queryString : '');?>">Last Name</a></th>
+                <th><a href="<?=$phireUri . '/sessions?sort=role_name' . (($queryString != '') ? '&' . $queryString : '');?>">Role</a></th>
                 <th>IP</th>
                 <th>User Agent</th>
                 <th><a href="<?=$phireUri . '/sessions?sort=start';?>">Start</a></th>

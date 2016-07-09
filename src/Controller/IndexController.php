@@ -64,12 +64,13 @@ class IndexController extends AbstractController
             (int)$this->request->getQuery('role_id') : null;
 
         $this->prepareView('index.phtml');
-        $this->view->title     = 'Sessions';
-        $this->view->pages     = $pages;
-        $this->view->searchFor = $this->request->getQuery('search_for');
-        $this->view->searchBy  = $this->request->getQuery('search_by');
-        $this->view->roles     = $user->getRoles();
-        $this->view->sessions  = $session->getAll(
+        $this->view->title       = 'Sessions';
+        $this->view->pages       = $pages;
+        $this->view->queryString = $this->getQueryString('sort');
+        $this->view->searchFor   = $this->request->getQuery('search_for');
+        $this->view->searchBy    = $this->request->getQuery('search_by');
+        $this->view->roles       = $user->getRoles();
+        $this->view->sessions    = $session->getAll(
             $roleId, $searchAry, $limit, $this->request->getQuery('page'), $this->request->getQuery('sort')
         );
         $this->send();
@@ -158,11 +159,12 @@ class IndexController extends AbstractController
                     $users[$k]->failed_attempts = (null !== $session->failed_attempts) ? $session->failed_attempts : 0;
                 }
 
-                $this->view->users     = $users;
-                $this->view->pages     = $pages;
-                $this->view->searchFor = $this->request->getQuery('search_for');
-                $this->view->searchBy  = $this->request->getQuery('search_by');
-                $this->view->roles     = $user->getRoles();
+                $this->view->users       = $users;
+                $this->view->pages       = $pages;
+                $this->view->queryString = $this->getQueryString('sort');
+                $this->view->searchFor   = $this->request->getQuery('search_for');
+                $this->view->searchBy    = $this->request->getQuery('search_by');
+                $this->view->roles       = $user->getRoles();
                 $this->send();
             }
         }
